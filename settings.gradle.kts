@@ -16,6 +16,6 @@ dependencyResolutionManagement {
         maven { url = java.net.URI("https://jitpack.io") }
     }
 }
-rootProject.name = "android_common"
+rootProject.name = "android-common"
 include(":app")
 include(":common")
