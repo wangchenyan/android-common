@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name="common_title_layout" type="id" />
+    <item name="common_tl_menu_day_night" type="id" />
+</resources>

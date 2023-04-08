@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tvDefaultTitle"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:paddingLeft="88dp"
+    android:paddingRight="88dp"
+    android:singleLine="true"
+    android:textColor="@color/common_text_h1_color"
+    android:textSize="18dp"
+    android:textStyle="bold"
+    tools:text="标题" />

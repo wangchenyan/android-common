@@ -1,0 +1,29 @@
+package me.wcy.common
+
+import androidx.annotation.DrawableRes
+import me.wcy.common.net.ApiCaller
+import me.wcy.common.widget.TitleLayout
+
+/**
+ * Created by wangchenyan.top on 2023/2/22.
+ */
+interface CommonConfig {
+    val test: Boolean
+
+    val isDarkMode: Boolean
+
+    val res: ResConfig
+
+    val title: TitleLayout.TitleLayoutConfig
+
+    val apiCaller: ApiCaller.ApiCallerEvent
+
+    interface ResConfig {
+
+        @get:DrawableRes
+        val logoRoundRes: Int
+
+        @get:DrawableRes
+        val notificationIconRes: Int
+    }
+}

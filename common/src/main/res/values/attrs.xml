@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="TitleLayout">
+        <attr name="tlTextStyle">
+            <enum name="auto" value="0" />
+            <enum name="black" value="1" />
+            <enum name="white" value="2" />
+        </attr>
+        <attr name="tlTextStyleAfterScroll">
+            <enum name="auto" value="0" />
+            <enum name="black" value="1" />
+            <enum name="white" value="2" />
+        </attr>
+        <attr name="tlJustShowStatusBar" format="boolean" />
+        <attr name="tlScrollViewId" format="reference" />
+        <attr name="tlScrollThreshold" format="dimension" />
+        <attr name="tlShowBack" format="boolean" />
+        <attr name="tlBackCloseStyle" format="boolean" />
+        <attr name="tlTitleContentLayout" format="reference" />
+        <attr name="tlTitleText" format="string" />
+        <attr name="tlBackgroundDrawable" format="reference" />
+        <attr name="tlBackgroundColor" format="color" />
+    </declare-styleable>
+</resources>
