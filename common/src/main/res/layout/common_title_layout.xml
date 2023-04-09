@@ -16,7 +16,6 @@
         android:layout_width="@dimen/common_title_bar_size"
         android:layout_height="@dimen/common_title_bar_size"
         android:layout_centerVertical="true"
-        android:layout_marginStart="10dp"
         android:contentDescription="@null"
         android:scaleType="centerInside"
         app:srcCompat="@drawable/common_ic_title_back" />
