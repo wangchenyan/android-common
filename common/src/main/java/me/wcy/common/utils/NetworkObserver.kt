@@ -8,11 +8,11 @@ import com.blankj.utilcode.util.NetworkUtils
 /**
  * Created by wangchenyan.top on 2022/9/29.
  */
-class NetworkObserver(lifecycle: Lifecycle) {
+class NetworkObserver(lifecycle: Lifecycle?) {
     private var networkListener: NetworkUtils.OnNetworkStatusChangedListener? = null
 
     init {
-        lifecycle.addObserver(object : DefaultLifecycleObserver {
+        lifecycle?.addObserver(object : DefaultLifecycleObserver {
             override fun onDestroy(owner: LifecycleOwner) {
                 super.onDestroy(owner)
                 networkListener?.let {
