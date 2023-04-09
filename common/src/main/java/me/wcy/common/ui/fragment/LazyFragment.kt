@@ -8,8 +8,8 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.annotation.CallSuper
 import com.blankj.utilcode.util.AppUtils
-import me.wcy.common.widget.TitleLayout
 import me.wcy.common.R
+import me.wcy.common.widget.TitleLayout
 import me.wcy.common.widget.pager.IPagerFragment
 
 abstract class LazyFragment : RouterFragment(), IPagerFragment {
@@ -55,12 +55,16 @@ abstract class LazyFragment : RouterFragment(), IPagerFragment {
         val rootView = view as ViewGroup?
         rootView?.addView(getRootView())
         onLazyCreate()
+        onPostCreate()
     }
 
     @CallSuper
     protected open fun onLazyCreate() {
         Log.d(TAG, "${javaClass.simpleName} -> onLazyCreate")
-        // RxBus.get().register(this)
+    }
+
+    @CallSuper
+    protected open fun onPostCreate() {
     }
 
     override fun onPause() {
@@ -99,6 +103,5 @@ abstract class LazyFragment : RouterFragment(), IPagerFragment {
 
     protected open fun onLazyDestroy() {
         Log.d(TAG, "${javaClass.simpleName} -> onLazyDestroy")
-        // RxBus.get().unregister(this)
     }
 }

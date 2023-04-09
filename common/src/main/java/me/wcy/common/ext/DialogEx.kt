@@ -16,14 +16,16 @@ fun Fragment.showSingleDialog(
     title: CharSequence = StringUtils.getString(R.string.common_tips),
     message: CharSequence = "",
     buttonText: CharSequence = StringUtils.getString(R.string.common_confirm),
+    isMessageCenter: Boolean = true,
     showClose: Boolean = false,
     onButtonClick: () -> Unit = {}
-) = context.showSingleDialog(title, message, buttonText, showClose, onButtonClick)
+) = context.showSingleDialog(title, message, buttonText, isMessageCenter, showClose, onButtonClick)
 
 fun Context?.showSingleDialog(
     title: CharSequence = StringUtils.getString(R.string.common_tips),
     message: CharSequence = "",
     buttonText: CharSequence = StringUtils.getString(R.string.common_confirm),
+    isMessageCenter: Boolean = true,
     showClose: Boolean = false,
     onButtonClick: () -> Unit = {}
 ) {
@@ -31,7 +33,7 @@ fun Context?.showSingleDialog(
     CenterDialogBuilder(this)
         .title(title)
         .message(message)
-        .isMessageCenter(true)
+        .isMessageCenter(isMessageCenter)
         .buttonText(buttonText)
         .isShowCloseView(showClose)
         .onButtonClickListener { dialog, which ->

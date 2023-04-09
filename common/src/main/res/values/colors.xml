@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="common_theme_color">#6200EE</color>
+    <color name="common_background_color">#F3F3F3</color>
     <color name="common_title_bar_color">@android:color/white</color>
     <color name="common_dialog_background_color">@android:color/white</color>
     <color name="common_text_h1_color">@android:color/black</color>

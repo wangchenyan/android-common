@@ -1,5 +1,6 @@
 package me.wcy.common.utils
 
+import android.text.format.DateUtils
 import com.blankj.utilcode.util.TimeUtils
 import java.text.DateFormat
 import java.util.Calendar
@@ -48,5 +49,29 @@ object TimeUtils {
         calendar.set(Calendar.SECOND, 0)
         calendar.set(Calendar.MILLISECOND, 0)
         return calendar.time
+    }
+
+    fun millis2Hms(millis: Long): Triple<String, String, String> {
+        val hour = millis / DateUtils.HOUR_IN_MILLIS
+        val minute = (millis % DateUtils.HOUR_IN_MILLIS) / DateUtils.MINUTE_IN_MILLIS
+        val second = (millis % DateUtils.MINUTE_IN_MILLIS) / DateUtils.SECOND_IN_MILLIS
+        return Triple(
+            String.format("%02d", hour),
+            String.format("%02d", minute),
+            String.format("%02d", second)
+        )
+    }
+
+    fun millis2Dhms(millis: Long): Array<String> {
+        val day = millis / DateUtils.DAY_IN_MILLIS
+        val hour = (millis % DateUtils.DAY_IN_MILLIS) / DateUtils.HOUR_IN_MILLIS
+        val minute = (millis % DateUtils.HOUR_IN_MILLIS) / DateUtils.MINUTE_IN_MILLIS
+        val second = (millis % DateUtils.MINUTE_IN_MILLIS) / DateUtils.SECOND_IN_MILLIS
+        return arrayOf(
+            String.format("%02d", day),
+            String.format("%02d", hour),
+            String.format("%02d", minute),
+            String.format("%02d", second)
+        )
     }
 }

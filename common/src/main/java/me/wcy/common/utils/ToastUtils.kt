@@ -18,14 +18,6 @@ object ToastUtils {
         showToast(StringUtils.getString(resId), *args)
     }
 
-    fun showSuccess(text: CharSequence?) {
-        show(text)
-    }
-
-    fun showWarn(text: CharSequence?) {
-        show(text)
-    }
-
     private fun showToast(text: String, vararg args: Any) {
         if (text.isEmpty()) {
             return

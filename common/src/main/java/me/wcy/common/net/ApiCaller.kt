@@ -36,7 +36,7 @@ object ApiCaller {
     }
 
     interface ApiCallerEvent {
-        fun onAuthInvalid()
+        suspend fun onAuthInvalid()
 
         suspend fun beforeApiCall()
     }

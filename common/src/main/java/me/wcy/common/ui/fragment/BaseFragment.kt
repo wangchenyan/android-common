@@ -17,12 +17,16 @@ abstract class BaseFragment : LoadingFragment(), BackEventInterceptor {
     @ColorRes
     open fun getNavigationBarColor(): Int = 0
 
-    protected fun setResultAndFinish(data: Intent? = null) {
+    protected fun setResult(data: Intent? = null) {
         if (data == null) {
             activity?.setResult(Activity.RESULT_OK)
         } else {
             activity?.setResult(Activity.RESULT_OK, data)
         }
+    }
+
+    protected fun setResultAndFinish(data: Intent? = null) {
+        setResult(data)
         activity?.finish()
     }
 

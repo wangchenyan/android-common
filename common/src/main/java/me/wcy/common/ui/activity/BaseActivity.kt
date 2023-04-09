@@ -7,7 +7,6 @@ import android.util.Log
 import androidx.annotation.ColorRes
 import com.blankj.utilcode.util.KeyboardUtils
 import com.gyf.immersionbar.ImmersionBar
-import me.wcy.common.CommonApp
 import me.wcy.common.R
 import me.wcy.common.utils.StatusBarUtils
 import me.wcy.common.widget.TitleLayout
@@ -25,7 +24,6 @@ abstract class BaseActivity : LoadingActivity() {
         super.onPostCreate(savedInstanceState)
         if (StatusBarUtils.isSupportStatusBarTransparent()) {
             ImmersionBar.with(this)
-                .statusBarDarkFont(CommonApp.config.isDarkMode.not())
                 .navigationBarColor(getNavigationBarColor())
                 .navigationBarDarkIcon(true)
                 .keyboardEnable(true)
@@ -61,7 +59,9 @@ abstract class BaseActivity : LoadingActivity() {
     }
 
     @ColorRes
-    protected open fun getNavigationBarColor() = 0
+    protected open fun getNavigationBarColor(): Int {
+        return R.color.common_background_color
+    }
 
     override fun onDestroy() {
         super.onDestroy()

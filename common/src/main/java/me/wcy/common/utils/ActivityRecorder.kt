@@ -11,6 +11,7 @@ import me.wcy.common.CommonApp
  * @author wcy
  * @date 2018/7/20
  */
+@Deprecated("已废弃")
 object ActivityRecorder {
     private val activityList = mutableListOf<Activity>()
     private var foregroundActivityCount = 0
