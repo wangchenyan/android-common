@@ -1,6 +1,7 @@
 package me.wcy.common
 
 import androidx.annotation.DrawableRes
+import me.wcy.common.ext.ImageLoaderConfig
 import me.wcy.common.net.ApiCaller
 import me.wcy.common.widget.TitleLayout
 
@@ -17,6 +18,9 @@ interface CommonConfig {
     val title: TitleLayout.TitleLayoutConfig
 
     val apiCaller: ApiCaller.ApiCallerEvent
+
+    val imageLoader: ImageLoaderConfig
+        get() = object : ImageLoaderConfig {}
 
     interface ResConfig {
 
