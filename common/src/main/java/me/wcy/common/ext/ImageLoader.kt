@@ -115,9 +115,9 @@ interface ImageLoaderConfig {
 
     @get:DrawableRes
     val placeholderRound: Int
-        get() = R.drawable.base_bg_image_placeholder_round
+        get() = R.drawable.common_bg_image_placeholder_round
 
     @get:DrawableRes
     val placeholderAvatar: Int
-        get() = R.drawable.base_bg_image_placeholder_round
+        get() = R.drawable.common_bg_image_placeholder_round
 }
