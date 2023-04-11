@@ -1,8 +1,13 @@
 package me.wcy.common
 
+import android.app.Activity
 import android.app.Application
+import androidx.lifecycle.MutableLiveData
+import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.Utils
+import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
+import me.wcy.common.ext.toUnMutable
 import me.wcy.common.utils.filedownloader.FileDownloader
 
 /**
@@ -25,9 +30,21 @@ object CommonApp {
     @JvmStatic
     val test: Boolean by lazy { config.test }
 
+    private val appForegroundInternal = MutableLiveData(false)
+    val appForeground = appForegroundInternal.toUnMutable()
+
     fun init(config: CommonConfig) {
         _config = config
         FileDownloader.setupOnApplicationOnCreate(app)
         GsonUtils.setGsonDelegate(me.wcy.common.utils.GsonUtils.gson)
+        AppUtils.registerAppStatusChangedListener(object : OnAppStatusChangedListener {
+            override fun onForeground(activity: Activity?) {
+                appForegroundInternal.value = true
+            }
+
+            override fun onBackground(activity: Activity?) {
+                appForegroundInternal.value = false
+            }
+        })
     }
 }
