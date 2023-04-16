@@ -23,4 +23,13 @@ abstract class SimpleRefreshFragment<T> : BaseRefreshFragment<T>() {
     override fun getRecyclerView(): RecyclerView {
         return viewBinding.recyclerView
     }
+
+    protected abstract fun isShowTitle(): Boolean
+
+    override fun onLazyCreate() {
+        super.onLazyCreate()
+        if (isShowTitle()) {
+            viewBinding.titleLayoutStub.inflate()
+        }
+    }
 }
