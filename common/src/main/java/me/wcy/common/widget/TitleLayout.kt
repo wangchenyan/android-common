@@ -136,7 +136,7 @@ class TitleLayout @JvmOverloads constructor(
         val statusBarDarkFont: Boolean = when (textStyle) {
             TextStyle.BLACK -> true
             TextStyle.WHITE -> false
-            else -> getTitleConfig()?.isStatusBarDarkFontWhenAuto ?: false
+            else -> getTitleConfig().isStatusBarDarkFontWhenAuto
         }
         ActivityUtils.getActivityByContext(context)?.apply {
             ImmersionBar.with(this)
@@ -163,10 +163,10 @@ class TitleLayout @JvmOverloads constructor(
     fun setBackCloseStyle(isCloseStyle: Boolean) {
         binding.ivTitleLayoutBack.setImageResource(
             if (isCloseStyle) {
-                getTitleConfig()?.backIcon
+                getTitleConfig().backIcon
             } else {
-                getTitleConfig()?.backIcon
-            } ?: R.drawable.common_ic_title_back
+                getTitleConfig().backIcon
+            }
         )
     }
 
@@ -268,18 +268,18 @@ class TitleLayout @JvmOverloads constructor(
 
     private fun getTextColor(): ColorStateList {
         val colorResId = when (textStyle) {
-            TextStyle.BLACK -> getTitleConfig()?.textColorBlack
-            TextStyle.WHITE -> getTitleConfig()?.textColorWhite
-            TextStyle.AUTO -> getTitleConfig()?.textColorAuto
-        } ?: android.R.color.black
+            TextStyle.BLACK -> getTitleConfig().textColorBlack
+            TextStyle.WHITE -> getTitleConfig().textColorWhite
+            TextStyle.AUTO -> getTitleConfig().textColorAuto
+        }
         return AppCompatResources.getColorStateList(context, colorResId)
     }
 
-    private fun getTitleConfig(): TitleLayoutConfig? {
+    private fun getTitleConfig(): TitleLayoutConfig {
         return try {
             CommonApp.config.title
         } catch (t: Throwable) {
-            null
+            DefaultTitleLayoutConfig()
         }
     }
 
@@ -297,5 +297,18 @@ class TitleLayout @JvmOverloads constructor(
 
         @get:DrawableRes
         val backIcon: Int
+    }
+
+    class DefaultTitleLayoutConfig : TitleLayoutConfig {
+        override val isStatusBarDarkFontWhenAuto: Boolean
+            get() = true
+        override val textColorBlack: Int
+            get() = R.color.common_text_h1_color
+        override val textColorWhite: Int
+            get() = R.color.white
+        override val textColorAuto: Int
+            get() = R.color.common_text_h1_color
+        override val backIcon: Int
+            get() = R.drawable.common_ic_title_back
     }
 }
