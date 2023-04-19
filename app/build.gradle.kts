@@ -1,6 +1,8 @@
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
+    id("kotlin-kapt")
+    id("auto-register")
 }
 
 android {
@@ -37,10 +39,35 @@ android {
     }
 }
 
+kapt {
+    arguments {
+        arg("moduleName", project.name)
+        // crouter 默认 scheme
+        arg("defaultScheme", "app")
+        // crouter 默认 host
+        arg("defaultHost", "common.android")
+    }
+}
+
+autoregister {
+    registerInfo = ArrayList<Map<String, Any>>().apply {
+        // crouter 注解收集
+        add(
+            mapOf(
+                "scanInterface" to "me.wcy.router.annotation.RouterLoader",
+                "codeInsertToClassName" to "me.wcy.router.RouterSet",
+                "registerMethodName" to "register",
+                "include" to listOf("me/wcy/router/annotation/loader/.*")
+            )
+        )
+    }
+}
+
 dependencies {
     implementation("androidx.core:core-ktx:1.10.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+    kapt("com.github.wangchenyan.crouter:crouter-compiler:2.2.1")
     implementation(project(":common"))
 }

@@ -3,6 +3,7 @@ package top.wangchenyan.android_common
 import android.os.Bundle
 import me.wcy.common.ext.viewBindings
 import me.wcy.common.ui.activity.BaseActivity
+import me.wcy.router.CRouter
 import top.wangchenyan.android_common.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {
@@ -12,8 +13,8 @@ class MainActivity : BaseActivity() {
         super.onCreate(savedInstanceState)
         setContentView(viewBinding.root)
 
-        supportFragmentManager.beginTransaction()
-            .replace(R.id.root, ExampleRefreshFragment())
-            .commitAllowingStateLoss()
+        viewBinding.btnRefreshList.setOnClickListener {
+            CRouter.with().url("/refresh_list").start()
+        }
     }
 }
