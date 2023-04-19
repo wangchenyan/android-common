@@ -12,7 +12,7 @@ import me.wcy.router.CRouter
 /**
  * Created by wangchenyan.top on 2022/6/8.
  */
-class FragmentContainerActivity : BaseActivity() {
+open class FragmentContainerActivity : BaseActivity() {
     private var fragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
