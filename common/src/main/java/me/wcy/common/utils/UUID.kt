@@ -7,4 +7,8 @@ object UUID {
     fun getUUID(): String {
         return java.util.UUID.randomUUID().toString().replace("-", "")
     }
+
+    fun getShortUUID(): String {
+        return getUUID().take(8)
+    }
 }
