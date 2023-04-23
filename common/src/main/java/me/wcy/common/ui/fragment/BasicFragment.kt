@@ -10,7 +10,7 @@ import androidx.fragment.app.Fragment
 abstract class BasicFragment : Fragment() {
 
     companion object {
-        const val TAG = "WCY-Fragment"
+        const val TAG = "Common-Fragment"
     }
 
     override fun setArguments(args: Bundle?) {

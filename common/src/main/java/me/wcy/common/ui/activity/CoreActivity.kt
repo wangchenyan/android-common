@@ -8,7 +8,7 @@ import androidx.appcompat.app.AppCompatActivity
 abstract class CoreActivity : AppCompatActivity() {
 
     companion object {
-        const val TAG = "WCY-Activity"
+        const val TAG = "Common-Activity"
     }
 
     override fun onBackPressed() {
