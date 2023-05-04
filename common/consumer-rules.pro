@@ -44,3 +44,7 @@
 # loadsir
 -dontwarn com.kingja.loadsir.**
 -keep class com.kingja.loadsir.** {*;}
+
+# xpopup
+-dontwarn com.lxj.xpopup.widget.**
+-keep class com.lxj.xpopup.widget.**{*;}
