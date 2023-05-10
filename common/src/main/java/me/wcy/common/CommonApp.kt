@@ -7,6 +7,8 @@ import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.GsonUtils
 import com.blankj.utilcode.util.Utils
 import com.blankj.utilcode.util.Utils.OnAppStatusChangedListener
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.MainScope
 import me.wcy.common.ext.toUnMutable
 import me.wcy.common.utils.filedownloader.FileDownloader
 
@@ -16,10 +18,14 @@ import me.wcy.common.utils.filedownloader.FileDownloader
 object CommonApp {
     private var _config: CommonConfig? = null
 
-    @JvmStatic
-    val app: Application = Utils.getApp()
+    val app: Application by lazy {
+        Utils.getApp()
+    }
 
-    @JvmStatic
+    val appScope: CoroutineScope by lazy {
+        MainScope()
+    }
+
     val config: CommonConfig by lazy {
         if (_config == null) {
             throw IllegalStateException("CommonApp not init, please init first!")
@@ -27,7 +33,6 @@ object CommonApp {
         _config!!
     }
 
-    @JvmStatic
     val test: Boolean by lazy { config.test }
 
     private val appForegroundInternal = MutableLiveData(false)

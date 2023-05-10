@@ -1,4 +1,4 @@
-package top.wangchenyan.android_common
+package top.wangchenyan.android_common.refresh
 
 import me.wcy.common.model.CommonResult
 import me.wcy.common.ui.fragment.SimpleRefreshFragment
@@ -12,6 +12,7 @@ import top.wangchenyan.android_common.databinding.ItemSimpleBinding
  */
 @Router("/refresh_list")
 class ExampleRefreshFragment : SimpleRefreshFragment<String>() {
+    private var cursor = 0
 
     override fun initAdapter(adapter: RAdapter<String>) {
         adapter.register(TextViewBinder())
@@ -27,7 +28,14 @@ class ExampleRefreshFragment : SimpleRefreshFragment<String>() {
     }
 
     override suspend fun getData(page: Int): CommonResult<List<String>> {
-        val list = listOf("1", "2", "3", "4", "5", "6", "7", "8", "9", "10")
+        if (page == 1) {
+            cursor = 0
+        }
+        val list = mutableListOf<String>()
+        for (i in cursor until cursor + 10) {
+            list.add(i.toString())
+        }
+        cursor += 10
         return CommonResult.success(list)
     }
 
