@@ -9,35 +9,34 @@ import me.wcy.common.CommonApp
 /**
  * Created by wcy on 2020/11/5.
  */
-object ApiCaller {
-    const val TAG = "ApiCaller"
 
-    suspend inline fun <T> apiCall(crossinline call: suspend CoroutineScope.() -> NetResult<T>): NetResult<T> {
-        return withContext(Dispatchers.IO) {
-            CommonApp.config.apiCaller.beforeApiCall()
-            val res: NetResult<T>
-            try {
-                res = call()
-            } catch (e: Throwable) {
-                Log.e(TAG, "request error", e)
-                return@withContext ApiException.build(e).toResult<T>()
-            }
+const val TAG = "ApiCaller"
 
-            if (res.code == ApiException.CODE_AUTH_INVALID) {
-                Log.e(TAG, "request auth invalid")
-                CommonApp.config.apiCaller.onAuthInvalid()
-            }
-            return@withContext res
+suspend inline fun <T> apiCall(crossinline call: suspend CoroutineScope.() -> NetResult<T>): NetResult<T> {
+    return withContext(Dispatchers.IO) {
+        CommonApp.config.apiCaller.beforeApiCall()
+        val res: NetResult<T>
+        try {
+            res = call()
+        } catch (e: Throwable) {
+            Log.e(TAG, "request error", e)
+            return@withContext ApiException.build(e).toResult<T>()
         }
-    }
 
-    fun <T> ApiException.toResult(): NetResult<T> {
-        return NetResult(code, message)
+        if (res.code == ApiException.CODE_AUTH_INVALID) {
+            Log.e(TAG, "request auth invalid")
+            CommonApp.config.apiCaller.onAuthInvalid()
+        }
+        return@withContext res
     }
+}
 
-    interface ApiCallerEvent {
-        suspend fun onAuthInvalid()
+fun <T> ApiException.toResult(): NetResult<T> {
+    return NetResult(code, message)
+}
 
-        suspend fun beforeApiCall() {}
-    }
+interface ApiCallerEvent {
+    suspend fun onAuthInvalid()
+
+    suspend fun beforeApiCall() {}
 }

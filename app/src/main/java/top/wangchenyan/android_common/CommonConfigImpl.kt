@@ -2,7 +2,7 @@ package top.wangchenyan.android_common
 
 import me.wcy.common.CommonConfig
 import me.wcy.common.ext.ImageLoaderConfig
-import me.wcy.common.net.ApiCaller
+import me.wcy.common.net.ApiCallerEvent
 import me.wcy.common.widget.TitleLayout
 
 /**
@@ -34,8 +34,8 @@ class CommonConfigImpl : CommonConfig {
                 get() = R.drawable.common_ic_title_back
 
         }
-    override val apiCaller: ApiCaller.ApiCallerEvent
-        get() = object : ApiCaller.ApiCallerEvent {
+    override val apiCaller: ApiCallerEvent
+        get() = object : ApiCallerEvent {
             override suspend fun onAuthInvalid() {
 
             }
