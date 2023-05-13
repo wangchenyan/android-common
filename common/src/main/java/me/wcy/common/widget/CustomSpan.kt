@@ -31,19 +31,20 @@ object CustomSpan {
         text: CharSequence,
         @ColorInt color: Int? = null,
         @Dimension size: Int? = null,
-        isBold: Boolean? = null,
+        isBold: Boolean = false,
+        isShowUnderline: Boolean = false,
         onClick: ((View) -> Unit)? = null
     ) {
         if (onClick != null) {
-            inSpans(CustomClickSpan(color, isBold, onClick)) {
+            inSpans(CustomClickSpan(color, isBold, isShowUnderline, onClick)) {
                 append(text)
             }
         } else if (size != null) {
-            inSpans(CustomSizeSpan(size, color, isBold)) {
+            inSpans(CustomSizeSpan(size, color, isBold, isShowUnderline)) {
                 append(text)
             }
         } else if (color != null) {
-            inSpans(CustomTextSpan(color, isBold)) {
+            inSpans(CustomTextSpan(color, isBold, isShowUnderline)) {
                 append(text)
             }
         } else {
@@ -73,46 +74,45 @@ object CustomSpan {
 
     private class CustomTextSpan(
         @ColorInt private val color: Int,
-        private val isBold: Boolean? = null,
+        private val isBold: Boolean = false,
+        private val isShowUnderline: Boolean = false,
     ) : ForegroundColorSpan(color) {
         override fun updateDrawState(ds: TextPaint) {
             super.updateDrawState(ds)
-            if (isBold != null) {
-                ds.isFakeBoldText = isBold
-            }
+            ds.isFakeBoldText = isBold
+            ds.isUnderlineText = isShowUnderline
         }
     }
 
     private class CustomSizeSpan(
         @Dimension size: Int,
         @ColorInt private val color: Int? = null,
-        private val isBold: Boolean? = null,
+        private val isBold: Boolean = false,
+        private val isShowUnderline: Boolean = false,
     ) : AbsoluteSizeSpan(size) {
         override fun updateDrawState(ds: TextPaint) {
             super.updateDrawState(ds)
             if (color != null) {
                 ds.color = color
             }
-            if (isBold != null) {
-                ds.isFakeBoldText = isBold
-            }
+            ds.isFakeBoldText = isBold
+            ds.isUnderlineText = isShowUnderline
         }
     }
 
     private class CustomClickSpan(
         @ColorInt private val color: Int? = null,
-        private val isBold: Boolean? = null,
+        private val isBold: Boolean = false,
+        private val isShowUnderline: Boolean = false,
         private val onClick: ((View) -> Unit)
     ) : ClickableSpan() {
         override fun updateDrawState(ds: TextPaint) {
             super.updateDrawState(ds)
-            ds.isUnderlineText = false
             if (color != null) {
                 ds.color = color
             }
-            if (isBold != null) {
-                ds.isFakeBoldText = isBold
-            }
+            ds.isFakeBoldText = isBold
+            ds.isUnderlineText = isShowUnderline
         }
 
         override fun onClick(widget: View) {

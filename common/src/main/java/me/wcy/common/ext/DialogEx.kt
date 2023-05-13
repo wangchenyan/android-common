@@ -17,16 +17,23 @@ fun Fragment.showSingleDialog(
     message: CharSequence = "",
     buttonText: CharSequence = StringUtils.getString(R.string.common_confirm),
     isMessageCenter: Boolean = true,
-    showClose: Boolean = false,
+    isShowClose: Boolean = false,
     onButtonClick: () -> Unit = {}
-) = context.showSingleDialog(title, message, buttonText, isMessageCenter, showClose, onButtonClick)
+) = context.showSingleDialog(
+    title,
+    message,
+    buttonText,
+    isMessageCenter,
+    isShowClose,
+    onButtonClick
+)
 
 fun Context?.showSingleDialog(
     title: CharSequence = StringUtils.getString(R.string.common_tips),
     message: CharSequence = "",
     buttonText: CharSequence = StringUtils.getString(R.string.common_confirm),
     isMessageCenter: Boolean = true,
-    showClose: Boolean = false,
+    isShowClose: Boolean = false,
     onButtonClick: () -> Unit = {}
 ) {
     this ?: return
@@ -35,7 +42,7 @@ fun Context?.showSingleDialog(
         .message(message)
         .isMessageCenter(isMessageCenter)
         .buttonText(buttonText)
-        .isShowCloseView(showClose)
+        .isShowCloseView(isShowClose)
         .onButtonClickListener { dialog, which ->
             onButtonClick()
         }
@@ -50,7 +57,8 @@ fun Fragment.showConfirmDialog(
     confirmButton: CharSequence = StringUtils.getString(R.string.common_confirm),
     cancelButton: CharSequence = StringUtils.getString(R.string.common_cancel),
     isMessageCenter: Boolean = true,
-    cancelable: Boolean = false,
+    isShowClose: Boolean = false,
+    isCancelable: Boolean = false,
     onCancelClick: () -> Unit = {},
     onConfirmClick: () -> Unit = {},
 ) = context.showConfirmDialog(
@@ -59,7 +67,8 @@ fun Fragment.showConfirmDialog(
     confirmButton,
     cancelButton,
     isMessageCenter,
-    cancelable,
+    isShowClose,
+    isCancelable,
     onCancelClick,
     onConfirmClick
 )
@@ -70,7 +79,8 @@ fun Context?.showConfirmDialog(
     confirmButton: CharSequence = StringUtils.getString(R.string.common_confirm),
     cancelButton: CharSequence = StringUtils.getString(R.string.common_cancel),
     isMessageCenter: Boolean = true,
-    cancelable: Boolean = false,
+    isShowClose: Boolean = false,
+    isCancelable: Boolean = false,
     onCancelClick: () -> Unit = {},
     onConfirmClick: () -> Unit = {},
 ) {
@@ -79,6 +89,7 @@ fun Context?.showConfirmDialog(
         .title(title)
         .message(message)
         .isMessageCenter(isMessageCenter)
+        .isShowCloseView(isShowClose)
         .buttonText(confirmButton, cancelButton)
         .onButtonClickListener { dialog, which ->
             if (which == 0) {
@@ -87,7 +98,7 @@ fun Context?.showConfirmDialog(
                 onCancelClick()
             }
         }
-        .cancelable(cancelable)
+        .cancelable(isCancelable)
         .build()
         .show()
 }
@@ -95,21 +106,21 @@ fun Context?.showConfirmDialog(
 fun Fragment.showBottomItemsDialog(
     items: List<CharSequence>,
     selectedPosition: Int = -1,
-    cancelable: Boolean = true,
+    isCancelable: Boolean = true,
     onClickListener: DialogInterface.OnClickListener? = null,
-) = context.showBottomItemsDialog(items, selectedPosition, cancelable, onClickListener)
+) = context.showBottomItemsDialog(items, selectedPosition, isCancelable, onClickListener)
 
 fun Context?.showBottomItemsDialog(
     items: List<CharSequence>,
     selectedPosition: Int = -1,
-    cancelable: Boolean = true,
+    isCancelable: Boolean = true,
     onClickListener: DialogInterface.OnClickListener? = null,
 ) {
     this ?: return
     BottomItemsDialogBuilder(this)
         .items(items)
         .selectedPosition(selectedPosition)
-        .cancelable(cancelable)
+        .cancelable(isCancelable)
         .onClickListener(onClickListener)
         .build()
         .show()
