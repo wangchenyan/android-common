@@ -15,12 +15,11 @@ const val TAG = "ApiCaller"
 suspend inline fun <T> apiCall(crossinline call: suspend CoroutineScope.() -> NetResult<T>): NetResult<T> {
     return withContext(Dispatchers.IO) {
         CommonApp.config.apiCaller.beforeApiCall()
-        val res: NetResult<T>
-        try {
-            res = call()
+        val res: NetResult<T> = try {
+            call()
         } catch (e: Throwable) {
             Log.e(TAG, "request error", e)
-            return@withContext ApiException.build(e).toResult<T>()
+            ApiException.build(e).toResult()
         }
 
         if (res.code == ApiException.CODE_AUTH_INVALID) {
