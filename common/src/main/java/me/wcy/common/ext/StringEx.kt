@@ -10,12 +10,12 @@ import me.wcy.common.utils.DateUtils
  * Created by wangchenyan.top on 2022/7/14.
  */
 
-fun View.getString(@StringRes resId: Int): String {
-    return context.getString(resId)
+fun View.getString(@StringRes resId: Int, vararg formatArgs: Any): String {
+    return context.getString(resId, *formatArgs)
 }
 
-fun ViewBinding.getString(@StringRes resId: Int): String {
-    return context.getString(resId)
+fun ViewBinding.getString(@StringRes resId: Int, vararg formatArgs: Any): String {
+    return context.getString(resId, *formatArgs)
 }
 
 /**
