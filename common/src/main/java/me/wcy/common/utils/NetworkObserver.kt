@@ -4,6 +4,8 @@ import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleOwner
 import com.blankj.utilcode.util.NetworkUtils
+import kotlinx.coroutines.launch
+import me.wcy.common.CommonApp
 
 /**
  * Created by wangchenyan.top on 2022/9/29.
@@ -23,9 +25,9 @@ class NetworkObserver(lifecycle: Lifecycle?) {
     }
 
     /**
-     * 一次声明周期仅支持调用一次，多次调用会导致之前的监听失效
+     * 一个对象仅支持调用一次，多次调用会导致之前的监听失效
      */
-    fun onNetworkConnect(callback: () -> Unit) {
+    fun onNetworkConnectOnce(callback: () -> Unit) {
         if (networkListener != null) {
             NetworkUtils.unregisterNetworkStatusChangedListener(networkListener)
             networkListener = null
@@ -36,9 +38,11 @@ class NetworkObserver(lifecycle: Lifecycle?) {
         }
         networkListener = object : NetworkUtils.OnNetworkStatusChangedListener {
             override fun onConnected(networkType: NetworkUtils.NetworkType?) {
-                callback()
-                NetworkUtils.unregisterNetworkStatusChangedListener(networkListener)
-                networkListener = null
+                CommonApp.appScope.launch {
+                    callback()
+                    NetworkUtils.unregisterNetworkStatusChangedListener(networkListener)
+                    networkListener = null
+                }
             }
 
             override fun onDisconnected() {
