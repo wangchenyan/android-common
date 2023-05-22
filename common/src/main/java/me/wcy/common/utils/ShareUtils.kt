@@ -11,8 +11,8 @@ import androidx.core.os.bundleOf
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ImageUtils
 import com.blankj.utilcode.util.UriUtils
-import me.wcy.common.ext.toast
 import me.wcy.common.CommonApp
+import me.wcy.common.ext.toast
 import me.wcy.common.permission.Permissioner
 
 /**
@@ -25,8 +25,11 @@ object ShareUtils {
         ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.ShareToTimeLineUI")
     private val CN_WX_FAVORITE =
         ComponentName("com.tencent.mm", "com.tencent.mm.ui.tools.AddFavoriteUI")
-    private val CN_QQ =
-        ComponentName("com.tencent.mobileqq", "com.tencent.mobileqq.activity.JumpActivity")
+
+    // QQ分享会报 RiskWare/Android.QQshare 病毒
+    // private val CN_QQ =
+    //     ComponentName("com.tencent.mobileqq", "com.tencent.mobileqq.activity.JumpActivity")
+
     private const val PKG_WEIBO = "com.sina.weibo"
     private val CN_WEIBO: ComponentName? by lazy {
         val intent = Intent(Intent.ACTION_SEND)
@@ -46,7 +49,9 @@ object ShareUtils {
     sealed class Platform(val cn: ComponentName?, val appName: String) {
         object WechatFriend : Platform(CN_WX_FRIEND, "微信")
         object WechatMoments : Platform(CN_WX_MOMENTS, "微信")
-        object QQ : Platform(CN_QQ, "QQ")
+
+        // object QQ : Platform(CN_QQ, "QQ")
+
         object Weibo : Platform(CN_WEIBO, "微博")
     }
 
