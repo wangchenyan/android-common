@@ -3,8 +3,8 @@ pluginManagement {
         google()
         mavenCentral()
         gradlePluginPortal()
-        maven { url = java.net.URI("https://maven.aliyun.com/repository/public/") }
-        maven { url = java.net.URI("https://jitpack.io") }
+        maven("https://maven.aliyun.com/repository/public/")
+        maven("https://jitpack.io")
     }
 }
 dependencyResolutionManagement {
@@ -12,8 +12,8 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        maven { url = java.net.URI("https://maven.aliyun.com/repository/public/") }
-        maven { url = java.net.URI("https://jitpack.io") }
+        maven("https://maven.aliyun.com/repository/public/")
+        maven("https://jitpack.io")
     }
 }
 rootProject.name = "android-common"
