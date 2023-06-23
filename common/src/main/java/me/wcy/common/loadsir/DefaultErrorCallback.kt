@@ -14,7 +14,7 @@ import me.wcy.common.ext.fixClick
 /**
  * Created by wcy on 2021/1/9.
  */
-class BaseErrorCallback(
+class DefaultErrorCallback(
     val errorText: String = CommonApp.app.getString(R.string.common_empty),
     private val showRetry: Boolean = false
 ) : Callback() {

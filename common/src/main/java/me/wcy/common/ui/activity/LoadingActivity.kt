@@ -5,11 +5,10 @@ import android.view.ViewGroup
 import com.kingja.loadsir.callback.Callback
 import com.kingja.loadsir.core.LoadService
 import com.kingja.loadsir.core.LoadSir
-import me.wcy.common.loadsir.BaseEmptyCallback
-import me.wcy.common.loadsir.BaseErrorCallback
-import me.wcy.common.loadsir.BaseLoadingCallback
+import me.wcy.common.loadsir.DefaultEmptyCallback
+import me.wcy.common.loadsir.DefaultErrorCallback
+import me.wcy.common.loadsir.DefaultLoadingCallback
 import me.wcy.common.widget.dialog.LoadingDialog
-import me.wcy.common.ui.activity.RouterActivity
 
 /**
  * Created by wcy on 2020/12/22.
@@ -38,12 +37,12 @@ abstract class LoadingActivity : RouterActivity() {
     }
 
     private fun initLoadSir() {
-        if (useLoadSir()) {
+        if (isUseLoadSir()) {
             loadService = getLoadSir().register(getLoadSirTarget()) { onReload() }
         }
     }
 
-    protected open fun useLoadSir(): Boolean {
+    protected open fun isUseLoadSir(): Boolean {
         return false
     }
 
@@ -56,15 +55,15 @@ abstract class LoadingActivity : RouterActivity() {
     }
 
     protected open fun getLoadingCallback(): Callback {
-        return BaseLoadingCallback()
+        return DefaultLoadingCallback()
     }
 
     protected open fun getEmptyCallback(): Callback {
-        return BaseEmptyCallback()
+        return DefaultEmptyCallback()
     }
 
     protected open fun getErrorCallback(): Callback {
-        return BaseErrorCallback()
+        return DefaultErrorCallback()
     }
 
     protected open fun getLoadSirTarget(): Any {
@@ -75,7 +74,7 @@ abstract class LoadingActivity : RouterActivity() {
     }
 
     protected open fun showLoadSirLoading() {
-        loadService?.showCallback(BaseLoadingCallback::class.java)
+        loadService?.showCallback(DefaultLoadingCallback::class.java)
     }
 
     protected open fun showLoadSirSuccess() {
@@ -83,21 +82,21 @@ abstract class LoadingActivity : RouterActivity() {
     }
 
     protected open fun showLoadSirEmpty(message: String? = null) {
-        loadService?.showCallback(BaseEmptyCallback::class.java)
+        loadService?.showCallback(DefaultEmptyCallback::class.java)
         if (message?.isNotEmpty() == true) {
             loadService?.setCallBack(
-                BaseEmptyCallback::class.java,
-                BaseEmptyCallback.MessageTransport(message)
+                DefaultEmptyCallback::class.java,
+                DefaultEmptyCallback.MessageTransport(message)
             )
         }
     }
 
     protected open fun showLoadSirError(message: String? = null) {
-        loadService?.showCallback(BaseErrorCallback::class.java)
+        loadService?.showCallback(DefaultErrorCallback::class.java)
         if (message?.isNotEmpty() == true) {
             loadService?.setCallBack(
-                BaseErrorCallback::class.java,
-                BaseErrorCallback.MessageTransport(message)
+                DefaultErrorCallback::class.java,
+                DefaultErrorCallback.MessageTransport(message)
             )
         }
     }

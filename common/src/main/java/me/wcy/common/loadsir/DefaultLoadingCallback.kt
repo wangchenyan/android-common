@@ -5,7 +5,7 @@ import android.view.View
 import com.kingja.loadsir.callback.Callback
 import me.wcy.common.R
 
-class BaseLoadingCallback : Callback() {
+class DefaultLoadingCallback : Callback() {
     override fun onCreateView(): Int {
         return R.layout.common_load_sir_loading
     }

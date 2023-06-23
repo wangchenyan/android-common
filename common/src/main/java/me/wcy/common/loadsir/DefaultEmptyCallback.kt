@@ -16,7 +16,7 @@ import me.wcy.common.ext.fixClick
 /**
  * Created by wangchenyan.top on 2022/6/4.
  */
-class BaseEmptyCallback(
+class DefaultEmptyCallback(
     private val imageRes: Int = R.drawable.common_ic_page_empty,
     private val emptyText: String = CommonApp.app.getString(R.string.common_empty),
     private val buttonText: String? = null
