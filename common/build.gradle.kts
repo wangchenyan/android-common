@@ -34,7 +34,7 @@ dependencies {
     api("io.github.scwang90:refresh-header-material:2.0.5")
     api("io.github.scwang90:refresh-footer-classics:2.0.5")
     api("com.github.wangchenyan.crouter:crouter-api:2.2.1")
-    api("com.github.wangchenyan:radapter3:3.1.0")
+    api("com.github.wangchenyan:radapter3:3.1.1-alpha.0")
     api("com.kingja.loadsir:loadsir:1.3.8")
     api("com.geyifeng.immersionbar:immersionbar:3.2.2")
     implementation("com.github.soulqw:SoulPermission:1.3.1")
