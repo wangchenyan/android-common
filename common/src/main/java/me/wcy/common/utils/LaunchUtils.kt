@@ -1,13 +1,10 @@
 package me.wcy.common.utils
 
-import android.content.ActivityNotFoundException
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
 import android.net.Uri
-import me.wcy.common.model.CommonResult
 import java.net.URLEncoder
-
 
 object LaunchUtils {
     private const val WECHAT_PACKAGE_NAME = "com.tencent.mm"
@@ -15,18 +12,20 @@ object LaunchUtils {
     /**
      * 说明：使用浏览器打开
      */
-    fun launchBrowser(context: Context?, url: String?) {
+    fun launchBrowser(context: Context?, url: String?): Boolean {
         if (context == null || url.isNullOrEmpty()) {
-            return
+            return false
         }
         kotlin.runCatching {
             val uri = Uri.parse(url)
             val intent = Intent(Intent.ACTION_VIEW, uri)
             context.startActivity(intent)
+            return true
         }
+        return false
     }
 
-    fun launchGooglePlay(context: Context) {
+    fun launchGooglePlay(context: Context): Boolean {
         kotlin.runCatching {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse(
@@ -35,17 +34,21 @@ object LaunchUtils {
                 setPackage("com.android.vending")
             }
             context.startActivity(intent)
+            return true
         }
+        return false
     }
 
-    fun launchHuaweiStore(context: Context) {
+    fun launchHuaweiStore(context: Context): Boolean {
         kotlin.runCatching {
             val intent = Intent(Intent.ACTION_VIEW).apply {
                 data = Uri.parse("market://details?id=${context.packageName}")
                 setPackage("com.huawei.appmarket")
             }
             context.startActivity(intent)
+            return true
         }
+        return false
     }
 
     fun launchWechat(context: Context): Boolean {
@@ -71,21 +74,6 @@ object LaunchUtils {
             return true
         }
         return false
-    }
-
-    fun launchQQGroup(context: Context, groupId: String): CommonResult<Any> {
-        val url =
-            "mqqapi://card/show_pslcard?src_type=internal&version=1&uin=${groupId}&card_type=group&source=qrcode"
-        return try {
-            context.startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-            CommonResult.success(1)
-        } catch (e: Throwable) {
-            if (e is ActivityNotFoundException) {
-                CommonResult.fail(msg = "未安装QQ")
-            } else {
-                CommonResult.fail(msg = e.localizedMessage)
-            }
-        }
     }
 
     fun launchAlipayWithUrl(context: Context, url: String): Boolean {
