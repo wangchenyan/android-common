@@ -14,8 +14,6 @@ import me.wcy.common.ext.toast
 import me.wcy.common.model.CommonResult
 import me.wcy.common.permission.Permissioner
 import me.wcy.router.CRouter
-import top.zibin.luban.Luban
-import top.zibin.luban.OnCompressListener
 import java.io.File
 
 /**
@@ -68,7 +66,7 @@ object ImagePicker {
                     if (crop) {
                         startCorp(context, uri, callback)
                     } else {
-                        compressImage(context, captureFile) { f ->
+                        ImageUtils.compressImage(context, captureFile) { f ->
                             handleResult(f, callback)
                         }
                     }
@@ -91,7 +89,7 @@ object ImagePicker {
                         startCorp(context, it.data?.data!!, callback)
                     } else {
                         val file = UriUtils.uri2File(it.data?.data!!)
-                        compressImage(context, file) { f ->
+                        ImageUtils.compressImage(context, file) { f ->
                             handleResult(f, callback)
                         }
                     }
@@ -106,7 +104,7 @@ object ImagePicker {
     ) {
         // TODO Android 12 无法剪裁
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-            compressImage(context, UriUtils.uri2File(uri)) { f ->
+            ImageUtils.compressImage(context, UriUtils.uri2File(uri)) { f ->
                 handleResult(f, callback)
             }
             return
@@ -153,33 +151,5 @@ object ImagePicker {
             return
         }
         callback.invoke(CommonResult.success(file.path))
-    }
-
-    private fun compressImage(
-        context: Context,
-        file: File,
-        callback: (File) -> Unit
-    ) {
-        Luban.with(context)
-            .load(file)
-            .setCompressListener(object : OnCompressListener {
-                override fun onStart() {
-                }
-
-                override fun onSuccess(compressedFile: File?) {
-                    if (compressedFile?.exists() == true) {
-                        val cacheFile = File(FilePath.getCacheImageFilePath())
-                        FileUtils.move(compressedFile, cacheFile)
-                        callback(cacheFile)
-                    } else {
-                        onError(null)
-                    }
-                }
-
-                override fun onError(e: Throwable?) {
-                    callback(file)
-                }
-            })
-            .launch()
     }
 }
