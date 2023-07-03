@@ -40,14 +40,10 @@ object ImageUtils {
             })
     }
 
-    suspend fun compressImage(
-        context: Context,
-        srcFile: File,
-        destFile: File = File(FilePath.getCacheImageFilePath())
-    ): File {
+    suspend fun loadBitmap(url: Any): CommonResult<Bitmap> {
         return suspendCoroutine { continuation ->
-            compressImage(context, srcFile, destFile) { file ->
-                continuation.resume(file)
+            loadBitmap(url) { res ->
+                continuation.resume(res)
             }
         }
     }
@@ -78,5 +74,64 @@ object ImageUtils {
                 }
             })
             .launch()
+    }
+
+    suspend fun compressImage(
+        context: Context,
+        srcFile: File,
+        destFile: File = File(FilePath.getCacheImageFilePath())
+    ): File {
+        return suspendCoroutine { continuation ->
+            compressImage(context, srcFile, destFile) { file ->
+                continuation.resume(file)
+            }
+        }
+    }
+
+    fun save2Album(
+        url: String,
+        format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
+        callback: (CommonResult<Unit>) -> Unit
+    ) {
+        loadBitmap(url) { res ->
+            if (res.isSuccessWithData()) {
+                com.blankj.utilcode.util.ImageUtils.save2Album(
+                    res.getDataOrThrow(),
+                    format
+                )?.also {
+                    callback(CommonResult.success(Unit))
+                } ?: kotlin.run {
+                    callback(CommonResult.fail(msg = "保存失败"))
+                }
+            } else {
+                callback(CommonResult.fail(res.code, res.msg))
+            }
+        }
+    }
+
+    fun save2Album(
+        list: List<String>,
+        format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
+        callback: (CommonResult<Unit>) -> Unit
+    ) {
+        var saveCount = 0
+        var successCount = 0
+        list.forEach { url ->
+            save2Album(url, format) { res ->
+                if (res.isSuccess()) {
+                    successCount++
+                }
+                saveCount++
+                if (saveCount == list.size) {
+                    if (successCount == saveCount) {
+                        callback(CommonResult.success(Unit))
+                    } else if (successCount == 0) {
+                        callback(CommonResult.fail(msg = "保存失败"))
+                    } else {
+                        callback(CommonResult.fail(msg = "保存成功${successCount}张图片"))
+                    }
+                }
+            }
+        }
     }
 }

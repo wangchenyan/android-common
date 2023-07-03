@@ -1,5 +1,6 @@
 package me.wcy.common.utils.image
 
+import android.content.Context
 import android.view.ViewGroup
 import android.widget.ImageView
 import com.lxj.xpopup.XPopup
@@ -26,6 +27,12 @@ object ImageViewer {
                     }
                 }, SmartGlideImageLoader()
             )
+            .show()
+    }
+
+    fun show(context: Context, urls: List<String>, position: Int) {
+        XPopup.Builder(context)
+            .asImageViewer(null, position, urls, null, SmartGlideImageLoader())
             .show()
     }
 }

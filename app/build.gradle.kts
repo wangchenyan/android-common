@@ -50,17 +50,15 @@ kapt {
 }
 
 autoregister {
-    registerInfo = ArrayList<Map<String, Any>>().apply {
+    registerInfo = listOf(
         // crouter 注解收集
-        add(
-            mapOf(
-                "scanInterface" to "me.wcy.router.annotation.RouterLoader",
-                "codeInsertToClassName" to "me.wcy.router.RouterSet",
-                "registerMethodName" to "register",
-                "include" to listOf("me/wcy/router/annotation/loader/.*")
-            )
+        mapOf(
+            "scanInterface" to "me.wcy.router.annotation.RouterLoader",
+            "codeInsertToClassName" to "me.wcy.router.RouterSet",
+            "registerMethodName" to "register",
+            "include" to listOf("me/wcy/router/annotation/loader/.*")
         )
-    }
+    )
 }
 
 dependencies {
