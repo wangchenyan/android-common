@@ -29,72 +29,78 @@ object ImagePicker {
     ) {
         context.showBottomItemsDialog(listOf("相册", "拍照")) { dialog, which ->
             if (which == 0) {
-                Permissioner.requestStoragePermission(context) { granted, _ ->
-                    if (granted) {
-                        startAlbum(context, crop, callback)
-                    } else {
-                        toast("授权失败，无法打开相册")
-                    }
-                }
+                startAlbum(context, crop, callback)
             } else if (which == 1) {
-                Permissioner.requestCameraPermission(context) { granted, _ ->
-                    if (granted) {
-                        startCamera(context, crop, callback)
-                    } else {
-                        toast("授权失败，无法拍照")
-                    }
-                }
+                startCamera(context, crop, callback)
             }
         }
     }
 
-    private fun startCamera(
+    fun startCamera(
         context: Context,
         crop: Boolean,
         callback: (CommonResult<String>) -> Unit
     ) {
-        val captureFile = File(FilePath.getCacheImageFilePath())
-        FileUtils.createOrExistsFile(captureFile)
-        val uri = UriUtils.file2Uri(captureFile)
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-        CRouter.with(context)
-            .intent(intent)
-            .startForResult {
-                if (it.isSuccess()) {
-                    if (crop) {
-                        startCorp(context, uri, callback)
-                    } else {
-                        ImageUtils.compressImage(context, captureFile) { f ->
-                            handleResult(f, callback)
+        val start = {
+            val captureFile = File(FilePath.getCacheImageFilePath())
+            FileUtils.createOrExistsFile(captureFile)
+            val uri = UriUtils.file2Uri(captureFile)
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+            CRouter.with(context)
+                .intent(intent)
+                .startForResult {
+                    if (it.isSuccess()) {
+                        if (crop) {
+                            startCorp(context, uri, callback)
+                        } else {
+                            ImageUtils.compressImage(context, captureFile) { f ->
+                                handleResult(f, callback)
+                            }
                         }
                     }
                 }
+        }
+        Permissioner.requestCameraPermission(context) { granted, _ ->
+            if (granted) {
+                start()
+            } else {
+                toast("授权失败，无法拍照")
             }
+        }
     }
 
-    private fun startAlbum(
+    fun startAlbum(
         context: Context,
         crop: Boolean,
         callback: (CommonResult<String>) -> Unit
     ) {
-        val intent = Intent(Intent.ACTION_PICK)
-        intent.type = "image/*"
-        CRouter.with(context)
-            .intent(intent)
-            .startForResult {
-                if (it.isSuccess() && it.data?.data != null) {
-                    if (crop) {
-                        startCorp(context, it.data?.data!!, callback)
-                    } else {
-                        val file = UriUtils.uri2File(it.data?.data!!)
-                        ImageUtils.compressImage(context, file) { f ->
-                            handleResult(f, callback)
+        val start = {
+            val intent = Intent(Intent.ACTION_PICK)
+            intent.type = "image/*"
+            CRouter.with(context)
+                .intent(intent)
+                .startForResult {
+                    if (it.isSuccess() && it.data?.data != null) {
+                        if (crop) {
+                            startCorp(context, it.data?.data!!, callback)
+                        } else {
+                            val file = UriUtils.uri2File(it.data?.data!!)
+                            ImageUtils.compressImage(context, file) { f ->
+                                handleResult(f, callback)
+                            }
                         }
                     }
                 }
+        }
+        Permissioner.requestStoragePermission(context) { granted, _ ->
+            if (granted) {
+                start()
+            } else {
+                toast("授权失败，无法打开相册")
             }
+        }
     }
 
     private fun startCorp(
