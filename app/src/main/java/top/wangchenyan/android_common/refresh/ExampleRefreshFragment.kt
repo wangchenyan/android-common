@@ -4,13 +4,13 @@ import me.wcy.common.model.CommonResult
 import me.wcy.common.ui.fragment.SimpleRefreshFragment
 import me.wcy.radapter3.RAdapter
 import me.wcy.radapter3.RItemBinder
-import me.wcy.router.annotation.Router
+import me.wcy.router.annotation.Route
 import top.wangchenyan.android_common.databinding.ItemSimpleBinding
 
 /**
  * Created by wangchenyan.top on 2023/4/16.
  */
-@Router("/refresh_list")
+@Route("/refresh_list")
 class ExampleRefreshFragment : SimpleRefreshFragment<String>() {
     private var cursor = 0
 

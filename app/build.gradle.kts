@@ -53,8 +53,8 @@ autoregister {
     registerInfo = listOf(
         // crouter 注解收集
         mapOf(
-            "scanInterface" to "me.wcy.router.annotation.RouterLoader",
-            "codeInsertToClassName" to "me.wcy.router.RouterSet",
+            "scanInterface" to "me.wcy.router.annotation.RouteLoader",
+            "codeInsertToClassName" to "me.wcy.router.RouteSet",
             "registerMethodName" to "register",
             "include" to listOf("me/wcy/router/annotation/loader/.*")
         )
@@ -66,6 +66,6 @@ dependencies {
     implementation("androidx.appcompat:appcompat:1.6.1")
     implementation("com.google.android.material:material:1.8.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    kapt("com.github.wangchenyan.crouter:crouter-compiler:2.2.1")
+    kapt("com.github.wangchenyan.crouter:crouter-compiler:2.3.0-beta01")
     implementation(project(":common"))
 }
