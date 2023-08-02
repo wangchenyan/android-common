@@ -2,6 +2,7 @@ package me.wcy.common.permission
 
 import android.Manifest
 import android.content.Context
+import android.os.Build
 import androidx.annotation.MainThread
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
@@ -49,12 +50,21 @@ object Permissioner {
         context: Context,
         callback: PermissionCallback?
     ) {
-        requestPermissions(
-            context,
+        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_AUDIO,
+                Manifest.permission.READ_MEDIA_VIDEO,
+            )
+        } else {
             arrayOf(
                 Manifest.permission.READ_EXTERNAL_STORAGE,
                 Manifest.permission.WRITE_EXTERNAL_STORAGE
             )
+        }
+        requestPermissions(
+            context,
+            permissions
         ) { allGranted, grantedList, deniedList, shouldRationale ->
             callback?.invoke(allGranted, shouldRationale)
         }

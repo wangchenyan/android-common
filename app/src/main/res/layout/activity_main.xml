@@ -29,6 +29,12 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="RefreshList" />
+
+            <Button
+                android:id="@+id/btnImagePicker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="ImagePicker" />
         </LinearLayout>
     </ScrollView>
 </LinearLayout>

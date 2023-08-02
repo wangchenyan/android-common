@@ -16,5 +16,8 @@ class MainActivity : BaseActivity() {
         viewBinding.btnRefreshList.setOnClickListener {
             CRouter.with().url("/refresh_list").start()
         }
+        viewBinding.btnImagePicker.setOnClickListener {
+            CRouter.with().url("/image_picker").start()
+        }
     }
 }

@@ -41,34 +41,25 @@ object ImagePicker {
         crop: Boolean,
         callback: (CommonResult<String>) -> Unit
     ) {
-        val start = {
-            val captureFile = File(FilePath.getCacheImageFilePath())
-            FileUtils.createOrExistsFile(captureFile)
-            val uri = UriUtils.file2Uri(captureFile)
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
-            intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
-            CRouter.with(context)
-                .intent(intent)
-                .startForResult {
-                    if (it.isSuccess()) {
-                        if (crop) {
-                            startCorp(context, uri, callback)
-                        } else {
-                            ImageUtils.compressImage(context, captureFile) { f ->
-                                handleResult(f, callback)
-                            }
+        val captureFile = File(FilePath.getCacheImageFilePath())
+        FileUtils.createOrExistsFile(captureFile)
+        val uri = UriUtils.file2Uri(captureFile)
+        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, uri)
+        intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
+        CRouter.with(context)
+            .intent(intent)
+            .startForResult {
+                if (it.isSuccess()) {
+                    if (crop) {
+                        startCorp(context, uri, callback)
+                    } else {
+                        ImageUtils.compressImage(context, captureFile) { f ->
+                            handleResult(f, callback)
                         }
                     }
                 }
-        }
-        Permissioner.requestCameraPermission(context) { granted, _ ->
-            if (granted) {
-                start()
-            } else {
-                toast("授权失败，无法拍照")
             }
-        }
     }
 
     fun startAlbum(
