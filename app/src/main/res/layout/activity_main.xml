@@ -14,33 +14,9 @@
         app:tlShowBack="false"
         app:tlTitleText="AndroidCommon" />
 
-    <ScrollView
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingHorizontal="16dp">
-
-            <Button
-                android:id="@+id/btnRefreshList"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="RefreshList" />
-
-            <Button
-                android:id="@+id/btnImagePicker"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="ImagePicker" />
-
-            <Button
-                android:id="@+id/btnShare"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="Share" />
-        </LinearLayout>
-    </ScrollView>
+        android:layout_height="match_parent"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 </LinearLayout>

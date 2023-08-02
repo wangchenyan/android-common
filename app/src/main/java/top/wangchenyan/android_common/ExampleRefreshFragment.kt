@@ -1,4 +1,4 @@
-package top.wangchenyan.android_common.refresh
+package top.wangchenyan.android_common
 
 import me.wcy.common.model.CommonResult
 import me.wcy.common.ui.fragment.SimpleRefreshFragment

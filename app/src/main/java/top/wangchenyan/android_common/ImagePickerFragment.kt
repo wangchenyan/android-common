@@ -1,4 +1,4 @@
-package top.wangchenyan.android_common.image
+package top.wangchenyan.android_common
 
 import android.graphics.BitmapFactory
 import android.view.View
