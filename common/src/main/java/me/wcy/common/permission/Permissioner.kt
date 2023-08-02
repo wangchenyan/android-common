@@ -7,6 +7,7 @@ import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
 import com.qw.soul.permission.bean.Permissions
 import com.qw.soul.permission.bean.Special
+import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
 import com.qw.soul.permission.callbcak.CheckRequestPermissionsListener
 import com.qw.soul.permission.callbcak.SpecialPermissionListener
 import me.wcy.common.utils.AndroidVersionUtils
@@ -24,7 +25,25 @@ object Permissioner {
         }
     }
 
-    private fun requestPermissions(
+    fun requestPermission(
+        context: Context,
+        permission: String,
+        callback: PermissionCallback?
+    ) {
+        SoulPermission.getInstance()
+            .checkAndRequestPermission(permission, object : CheckRequestPermissionListener {
+                override fun onPermissionOk(permission: Permission?) {
+                    callback?.invoke(true, permission?.shouldRationale() ?: false)
+                }
+
+                override fun onPermissionDenied(permission: Permission?) {
+                    callback?.invoke(false, permission?.shouldRationale() ?: false)
+                }
+            })
+    }
+
+    @MainThread
+    fun requestPermissions(
         context: Context,
         permissions: Array<String>,
         callback: ((allGranted: Boolean, grantedList: List<String>?, deniedList: List<String>?, shouldRationale: Boolean) -> Unit)?
@@ -75,12 +94,7 @@ object Permissioner {
         context: Context,
         callback: PermissionCallback?
     ) {
-        requestPermissions(
-            context,
-            arrayOf(Manifest.permission.READ_PHONE_STATE),
-        ) { allGranted, grantedList, deniedList, shouldRationale ->
-            callback?.invoke(allGranted, shouldRationale)
-        }
+        requestPermission(context, Manifest.permission.READ_PHONE_STATE, callback)
     }
 
     @MainThread
@@ -88,12 +102,7 @@ object Permissioner {
         context: Context,
         callback: PermissionCallback?
     ) {
-        requestPermissions(
-            context,
-            arrayOf(Manifest.permission.CAMERA),
-        ) { allGranted, grantedList, deniedList, shouldRationale ->
-            callback?.invoke(allGranted, shouldRationale)
-        }
+        requestPermission(context, Manifest.permission.CAMERA, callback)
     }
 
     @MainThread
@@ -114,21 +123,31 @@ object Permissioner {
     }
 
     fun hasNotificationPermission(context: Context): Boolean {
-        return SoulPermission.getInstance().checkSpecialPermission(Special.NOTIFICATION)
+        return if (AndroidVersionUtils.isAboveOrEqual13()) {
+            SoulPermission.getInstance()
+                .checkSinglePermission(Manifest.permission.POST_NOTIFICATIONS).isGranted
+        } else {
+            SoulPermission.getInstance().checkSpecialPermission(Special.NOTIFICATION)
+        }
     }
 
     @MainThread
-    fun requestNotificationPermission(context: Context, callback: SpecialPermissionCallback?) {
-        SoulPermission.getInstance()
-            .checkAndRequestPermission(Special.NOTIFICATION, object : SpecialPermissionListener {
-                override fun onGranted(permission: Special?) {
-                    callback?.invoke(true)
-                }
+    fun requestNotificationPermission(context: Context, callback: PermissionCallback?) {
+        if (AndroidVersionUtils.isAboveOrEqual13()) {
+            requestPermission(context, Manifest.permission.POST_NOTIFICATIONS, callback)
+        } else {
+            SoulPermission.getInstance().checkAndRequestPermission(
+                Special.NOTIFICATION,
+                object : SpecialPermissionListener {
+                    override fun onGranted(permission: Special?) {
+                        callback?.invoke(true, false)
+                    }
 
-                override fun onDenied(permission: Special?) {
-                    callback?.invoke(false)
-                }
-            })
+                    override fun onDenied(permission: Special?) {
+                        callback?.invoke(false, false)
+                    }
+                })
+        }
     }
 
     fun hasInstallPermission(context: Context): Boolean {
@@ -136,19 +155,18 @@ object Permissioner {
     }
 
     @MainThread
-    fun requestInstallPermission(context: Context, callback: SpecialPermissionCallback?) {
-        SoulPermission.getInstance()
-            .checkAndRequestPermission(
-                Special.UNKNOWN_APP_SOURCES,
-                object : SpecialPermissionListener {
-                    override fun onGranted(permission: Special?) {
-                        callback?.invoke(true)
-                    }
+    fun requestInstallPermission(context: Context, callback: PermissionCallback?) {
+        SoulPermission.getInstance().checkAndRequestPermission(
+            Special.UNKNOWN_APP_SOURCES,
+            object : SpecialPermissionListener {
+                override fun onGranted(permission: Special?) {
+                    callback?.invoke(true, false)
+                }
 
-                    override fun onDenied(permission: Special?) {
-                        callback?.invoke(false)
-                    }
-                })
+                override fun onDenied(permission: Special?) {
+                    callback?.invoke(false, false)
+                }
+            })
     }
 
     fun hasSettingPermission(context: Context): Boolean {
@@ -156,15 +174,16 @@ object Permissioner {
     }
 
     @MainThread
-    fun requestSettingPermission(context: Context, callback: SpecialPermissionCallback?) {
-        SoulPermission.getInstance()
-            .checkAndRequestPermission(Special.WRITE_SETTINGS, object : SpecialPermissionListener {
+    fun requestSettingPermission(context: Context, callback: PermissionCallback?) {
+        SoulPermission.getInstance().checkAndRequestPermission(
+            Special.WRITE_SETTINGS,
+            object : SpecialPermissionListener {
                 override fun onGranted(permission: Special?) {
-                    callback?.invoke(true)
+                    callback?.invoke(true, false)
                 }
 
                 override fun onDenied(permission: Special?) {
-                    callback?.invoke(false)
+                    callback?.invoke(false, false)
                 }
             })
     }
