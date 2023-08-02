@@ -19,5 +19,8 @@ class MainActivity : BaseActivity() {
         viewBinding.btnImagePicker.setOnClickListener {
             CRouter.with().url("/image_picker").start()
         }
+        viewBinding.btnShare.setOnClickListener {
+            CRouter.with().url("/share").start()
+        }
     }
 }
