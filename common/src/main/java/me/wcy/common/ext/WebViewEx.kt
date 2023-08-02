@@ -50,14 +50,10 @@ private fun WebView.initCommon() {
     settings.allowFileAccess = false
     settings.savePassword = false
     settings.javaScriptEnabled = true
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-        settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
-    }
-    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
-        removeJavascriptInterface("searchBoxJavaBridge_")
-        removeJavascriptInterface("accessibility")
-        removeJavascriptInterface("accessibilityTraversal")
-    }
+    settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
+    removeJavascriptInterface("searchBoxJavaBridge_")
+    removeJavascriptInterface("accessibility")
+    removeJavascriptInterface("accessibilityTraversal")
 }
 
 /**

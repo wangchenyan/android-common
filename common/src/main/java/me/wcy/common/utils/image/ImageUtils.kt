@@ -10,6 +10,7 @@ import com.bumptech.glide.request.transition.Transition
 import me.wcy.common.CommonApp
 import me.wcy.common.const.FilePath
 import me.wcy.common.model.CommonResult
+import me.wcy.common.permission.Permissioner
 import top.zibin.luban.Luban
 import top.zibin.luban.OnCompressListener
 import java.io.File
@@ -89,48 +90,62 @@ object ImageUtils {
     }
 
     fun save2Album(
+        context: Context,
         url: String,
         format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
         callback: (CommonResult<Unit>) -> Unit
     ) {
-        loadBitmap(url) { res ->
-            if (res.isSuccessWithData()) {
-                com.blankj.utilcode.util.ImageUtils.save2Album(
-                    res.getDataOrThrow(),
-                    format
-                )?.also {
-                    callback(CommonResult.success(Unit))
-                } ?: kotlin.run {
-                    callback(CommonResult.fail(msg = "保存失败"))
+        Permissioner.requestStoragePermission(context) { granted, shouldRationale ->
+            if (granted) {
+                loadBitmap(url) { res ->
+                    if (res.isSuccessWithData()) {
+                        com.blankj.utilcode.util.ImageUtils.save2Album(
+                            res.getDataOrThrow(),
+                            format
+                        )?.also {
+                            callback(CommonResult.success(Unit))
+                        } ?: kotlin.run {
+                            callback(CommonResult.fail(msg = "保存失败"))
+                        }
+                    } else {
+                        callback(CommonResult.fail(res.code, res.msg))
+                    }
                 }
             } else {
-                callback(CommonResult.fail(res.code, res.msg))
+                callback(CommonResult.fail(msg = "授权失败"))
             }
         }
     }
 
     fun save2Album(
+        context: Context,
         list: List<String>,
         format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
         callback: (CommonResult<Unit>) -> Unit
     ) {
-        var saveCount = 0
-        var successCount = 0
-        list.forEach { url ->
-            save2Album(url, format) { res ->
-                if (res.isSuccess()) {
-                    successCount++
-                }
-                saveCount++
-                if (saveCount == list.size) {
-                    if (successCount == saveCount) {
-                        callback(CommonResult.success(Unit))
-                    } else if (successCount == 0) {
-                        callback(CommonResult.fail(msg = "保存失败"))
-                    } else {
-                        callback(CommonResult.fail(msg = "保存成功${successCount}张图片"))
+        Permissioner.requestStoragePermission(context) { granted, shouldRationale ->
+            if (granted) {
+                var saveCount = 0
+                var successCount = 0
+                list.forEach { url ->
+                    save2Album(context, url, format) { res ->
+                        if (res.isSuccess()) {
+                            successCount++
+                        }
+                        saveCount++
+                        if (saveCount == list.size) {
+                            if (successCount == saveCount) {
+                                callback(CommonResult.success(Unit))
+                            } else if (successCount == 0) {
+                                callback(CommonResult.fail(msg = "保存失败"))
+                            } else {
+                                callback(CommonResult.fail(msg = "保存成功${successCount}张图片"))
+                            }
+                        }
                     }
                 }
+            } else {
+                callback(CommonResult.fail(msg = "授权失败"))
             }
         }
     }

@@ -2,7 +2,6 @@ package me.wcy.common.permission
 
 import android.Manifest
 import android.content.Context
-import android.os.Build
 import androidx.annotation.MainThread
 import com.qw.soul.permission.SoulPermission
 import com.qw.soul.permission.bean.Permission
@@ -10,6 +9,7 @@ import com.qw.soul.permission.bean.Permissions
 import com.qw.soul.permission.bean.Special
 import com.qw.soul.permission.callbcak.CheckRequestPermissionsListener
 import com.qw.soul.permission.callbcak.SpecialPermissionListener
+import me.wcy.common.utils.AndroidVersionUtils
 
 /**
  * Created by wcy on 2019/7/27.
@@ -50,7 +50,7 @@ object Permissioner {
         context: Context,
         callback: PermissionCallback?
     ) {
-        val permissions = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+        val permissions = if (AndroidVersionUtils.isAboveOrEqual13()) {
             arrayOf(
                 Manifest.permission.READ_MEDIA_IMAGES,
                 Manifest.permission.READ_MEDIA_AUDIO,

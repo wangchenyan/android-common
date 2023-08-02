@@ -1,7 +1,6 @@
 package me.wcy.common.widget
 
 import android.content.Context
-import android.os.Build
 import android.text.SpannableStringBuilder
 import android.text.TextPaint
 import android.text.style.AbsoluteSizeSpan
@@ -14,6 +13,7 @@ import androidx.annotation.Dimension
 import androidx.annotation.DrawableRes
 import androidx.core.content.ContextCompat
 import androidx.core.text.inSpans
+import me.wcy.common.utils.AndroidVersionUtils
 
 /**
  * Created by wangchenyan.top on 2023/2/26.
@@ -62,7 +62,7 @@ object CustomSpan {
         if (tint != null) {
             drawable.setTint(tint)
         }
-        val alignment = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        val alignment = if (AndroidVersionUtils.isAboveOrEqual10()) {
             ImageSpan.ALIGN_CENTER
         } else {
             ImageSpan.ALIGN_BOTTOM

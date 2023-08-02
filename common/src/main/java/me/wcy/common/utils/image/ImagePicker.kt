@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.provider.MediaStore
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.UriUtils
@@ -13,6 +12,7 @@ import me.wcy.common.ext.showBottomItemsDialog
 import me.wcy.common.ext.toast
 import me.wcy.common.model.CommonResult
 import me.wcy.common.permission.Permissioner
+import me.wcy.common.utils.AndroidVersionUtils
 import me.wcy.router.CRouter
 import java.io.File
 
@@ -68,7 +68,12 @@ object ImagePicker {
         callback: (CommonResult<String>) -> Unit
     ) {
         val start = {
-            val intent = Intent(Intent.ACTION_PICK)
+            val action = if (AndroidVersionUtils.isAboveOrEqual13()) {
+                MediaStore.ACTION_PICK_IMAGES
+            } else {
+                Intent.ACTION_PICK
+            }
+            val intent = Intent(action)
             intent.type = "image/*"
             CRouter.with(context)
                 .intent(intent)
@@ -100,7 +105,7 @@ object ImagePicker {
         callback: (CommonResult<String>) -> Unit
     ) {
         // TODO Android 12 无法剪裁
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        if (AndroidVersionUtils.isAboveOrEqual12()) {
             ImageUtils.compressImage(context, UriUtils.uri2File(uri)) { f ->
                 handleResult(f, callback)
             }
@@ -119,17 +124,19 @@ object ImagePicker {
         intent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION or Intent.FLAG_GRANT_WRITE_URI_PERMISSION)
         intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
         intent.putExtra("noFaceDetection", true)
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
-            // Android 11 无法传入指定路径，需要从返回中取出图片路径
+        if (AndroidVersionUtils.isAboveOrEqual11().not()) {
+            // Android 11 以下支持指定路径，Android 11 及以上需要从 Result 中获取图片路径
             intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(File(path)))
         }
         CRouter.with(context)
             .intent(intent)
             .startForResult {
                 if (it.isSuccess()) {
-                    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.R) {
+                    if (AndroidVersionUtils.isAboveOrEqual11().not()) {
+                        // Android 11 以下直接使用指定路径
                         handleResult(File(path), callback)
                     } else if (it.data?.data != null) {
+                        // Android 11 及以上从 data 中获取文件 uri
                         val file = UriUtils.uri2File(it.data?.data)
                         handleResult(file, callback)
                     } else {

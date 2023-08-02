@@ -45,6 +45,6 @@ object StatusBarUtils {
 
     @JvmStatic
     fun isSupportStatusBarTransparent(): Boolean {
-        return Build.VERSION.SDK_INT >= Build.VERSION_CODES.M
+        return AndroidVersionUtils.isAboveOrEqual6()
     }
 }

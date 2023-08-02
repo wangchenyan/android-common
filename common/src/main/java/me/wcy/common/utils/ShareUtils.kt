@@ -84,23 +84,6 @@ object ShareUtils {
         shareImage(context, bitmap, platform.cn, platform.appName, callback = callback)
     }
 
-    fun saveImage2Album(context: Context, bitmap: Bitmap, callback: ((Boolean) -> Unit)? = null) {
-        Permissioner.requestStoragePermission(context) { granted, shouldRationale ->
-            if (granted) {
-                val result = ImageUtils.save2Album(bitmap, Bitmap.CompressFormat.PNG)
-                if (result != null) {
-                    toast("保存成功")
-                    callback?.invoke(true)
-                } else {
-                    toast("保存失败")
-                    callback?.invoke(false)
-                }
-            } else {
-                callback?.invoke(false)
-            }
-        }
-    }
-
     private fun shareImage(
         context: Context,
         bitmap: Bitmap,

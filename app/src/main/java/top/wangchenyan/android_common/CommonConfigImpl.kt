@@ -32,7 +32,6 @@ class CommonConfigImpl : CommonConfig {
                 get() = R.color.black
             override val backIcon: Int
                 get() = R.drawable.common_ic_title_back
-
         }
     override val apiCaller: ApiCallerEvent
         get() = object : ApiCallerEvent {

@@ -4,7 +4,6 @@ import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.util.AttributeSet
 import android.view.LayoutInflater
 import android.view.View
@@ -29,6 +28,7 @@ import me.wcy.common.databinding.CommonTitleLayoutBinding
 import me.wcy.common.databinding.CommonTitleMenuButtonBinding
 import me.wcy.common.databinding.CommonTitleMenuImageBinding
 import me.wcy.common.databinding.CommonTitleMenuTextBinding
+import me.wcy.common.utils.AndroidVersionUtils
 import me.wcy.common.utils.StatusBarUtils
 import kotlin.math.max
 import kotlin.math.min
@@ -197,7 +197,7 @@ class TitleLayout @JvmOverloads constructor(
             return
         }
         val view = rootView.findViewById<View>(viewId)
-        if (view is ScrollView && Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+        if (view is ScrollView && AndroidVersionUtils.isAboveOrEqual6()) {
             updateTextStyleByScroll(view.scrollY)
             view.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
                 updateTextStyleByScroll(scrollY)
