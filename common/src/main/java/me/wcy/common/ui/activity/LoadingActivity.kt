@@ -5,6 +5,7 @@ import android.view.ViewGroup
 import com.kingja.loadsir.callback.Callback
 import com.kingja.loadsir.core.LoadService
 import com.kingja.loadsir.core.LoadSir
+import me.wcy.common.R
 import me.wcy.common.loadsir.DefaultEmptyCallback
 import me.wcy.common.loadsir.DefaultErrorCallback
 import me.wcy.common.loadsir.DefaultLoadingCallback
@@ -102,7 +103,7 @@ abstract class LoadingActivity : RouterActivity() {
     }
 
     fun showLoading(cancelable: Boolean = true) {
-        showLoading("加载中…")
+        showLoading(getString(R.string.common_loading))
     }
 
     fun showLoading(message: String, cancelable: Boolean = true) {

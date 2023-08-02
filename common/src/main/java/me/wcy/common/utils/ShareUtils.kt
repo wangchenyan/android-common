@@ -10,8 +10,10 @@ import android.os.Bundle
 import androidx.core.os.bundleOf
 import com.blankj.utilcode.util.AppUtils
 import com.blankj.utilcode.util.ImageUtils
+import com.blankj.utilcode.util.StringUtils
 import com.blankj.utilcode.util.UriUtils
 import me.wcy.common.CommonApp
+import me.wcy.common.R
 import me.wcy.common.ext.toast
 import me.wcy.common.permission.Permissioner
 
@@ -47,12 +49,13 @@ object ShareUtils {
     }
 
     sealed class Platform(val cn: ComponentName?, val appName: String) {
-        object WechatFriend : Platform(CN_WX_FRIEND, "微信")
-        object WechatMoments : Platform(CN_WX_MOMENTS, "微信")
+        object WechatFriend : Platform(CN_WX_FRIEND, StringUtils.getString(R.string.common_wechat))
+        object WechatMoments :
+            Platform(CN_WX_MOMENTS, StringUtils.getString(R.string.common_wechat))
 
         // object QQ : Platform(CN_QQ, "QQ")
 
-        object Weibo : Platform(CN_WEIBO, "微博")
+        object Weibo : Platform(CN_WEIBO, StringUtils.getString(R.string.common_weibo))
     }
 
     fun shareText(
@@ -96,7 +99,7 @@ object ShareUtils {
             if (granted) {
                 val file = ImageUtils.save2Album(bitmap, Bitmap.CompressFormat.PNG)
                 if (file == null || file.exists().not()) {
-                    toast("图片保存失败")
+                    toast(R.string.common_image_save_fail)
                     callback?.invoke(false)
                     return@requestStoragePermission
                 }
@@ -114,14 +117,14 @@ object ShareUtils {
                     callback?.invoke(true)
                 }.onFailure {
                     if (it is ActivityNotFoundException && name?.isNotEmpty() == true) {
-                        toast("未安装$name")
+                        toast("${context.getString(R.string.common_not_install)}$name")
                     } else {
-                        toast("分享失败")
+                        toast(R.string.common_share_fail)
                     }
                     callback?.invoke(false)
                 }
             } else {
-                toast("未授予存储权限，请授予后重试")
+                toast(R.string.common_not_grant_storage_permission)
                 callback?.invoke(false)
             }
         }
@@ -147,9 +150,9 @@ object ShareUtils {
             callback?.invoke(true)
         }.onFailure {
             if (it is ActivityNotFoundException && name?.isNotEmpty() == true) {
-                toast("未安装$name")
+                toast("${context.getString(R.string.common_not_install)}$name")
             } else {
-                toast("分享失败")
+                toast(R.string.common_share_fail)
             }
             callback?.invoke(false)
         }

@@ -1,0 +1,23 @@
+<resources>
+    <string name="common_tips">Hint</string>
+    <string name="common_confirm">Sure</string>
+    <string name="common_cancel">Cancel</string>
+    <string name="common_empty">Nothing here</string>
+    <string name="common_retry">Retry</string>
+    <string name="common_loading">Loading…</string>
+    <string name="common_album">Album</string>
+    <string name="common_capture">Photograph</string>
+    <string name="common_image_save_fail">Failed to save image</string>
+    <string name="common_share_fail">Share failed</string>
+    <string name="common_not_grant_storage_permission">Storage permission not granted</string>
+    <string name="common_save_fail">Save failed</string>
+    <string name="common_save_fail_partially">Partial save failed</string>
+    <string name="common_wechat">WeChat</string>
+    <string name="common_weibo">Weibo</string>
+    <string name="common_not_install">Not Installed</string>
+    <string name="common_net_error">Network anomaly</string>
+    <string name="common_net_unavailable">Network connection failed</string>
+    <string name="common_net_timeout">Network connection timed out</string>
+    <string name="common_net_data_parse_error">Data parsing error</string>
+    <string name="common_net_system_error">System error</string>
+</resources>

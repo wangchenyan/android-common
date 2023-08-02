@@ -8,6 +8,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import me.wcy.common.CommonApp
+import me.wcy.common.R
 import me.wcy.common.const.FilePath
 import me.wcy.common.model.CommonResult
 import me.wcy.common.permission.Permissioner
@@ -105,14 +106,14 @@ object ImageUtils {
                         )?.also {
                             callback(CommonResult.success(Unit))
                         } ?: kotlin.run {
-                            callback(CommonResult.fail(msg = "保存失败"))
+                            callback(CommonResult.fail(msg = context.getString(R.string.common_save_fail)))
                         }
                     } else {
                         callback(CommonResult.fail(res.code, res.msg))
                     }
                 }
             } else {
-                callback(CommonResult.fail(msg = "授权失败"))
+                callback(CommonResult.fail(msg = context.getString(R.string.common_not_grant_storage_permission)))
             }
         }
     }
@@ -137,15 +138,15 @@ object ImageUtils {
                             if (successCount == saveCount) {
                                 callback(CommonResult.success(Unit))
                             } else if (successCount == 0) {
-                                callback(CommonResult.fail(msg = "保存失败"))
+                                callback(CommonResult.fail(msg = context.getString(R.string.common_save_fail)))
                             } else {
-                                callback(CommonResult.fail(msg = "保存成功${successCount}张图片"))
+                                callback(CommonResult.fail(msg = context.getString(R.string.common_save_fail_partially)))
                             }
                         }
                     }
                 }
             } else {
-                callback(CommonResult.fail(msg = "授权失败"))
+                callback(CommonResult.fail(msg = context.getString(R.string.common_not_grant_storage_permission)))
             }
         }
     }

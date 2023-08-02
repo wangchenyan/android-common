@@ -7,6 +7,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import com.blankj.utilcode.util.FileUtils
 import com.blankj.utilcode.util.UriUtils
+import me.wcy.common.R
 import me.wcy.common.const.FilePath
 import me.wcy.common.ext.showBottomItemsDialog
 import me.wcy.common.ext.toast
@@ -27,7 +28,12 @@ object ImagePicker {
         crop: Boolean = false,
         callback: (CommonResult<String>) -> Unit
     ) {
-        context.showBottomItemsDialog(listOf("相册", "拍照")) { dialog, which ->
+        context.showBottomItemsDialog(
+            listOf(
+                context.getString(R.string.common_album),
+                context.getString(R.string.common_capture),
+            )
+        ) { dialog, which ->
             if (which == 0) {
                 startAlbum(context, crop, callback)
             } else if (which == 1) {
@@ -94,7 +100,7 @@ object ImagePicker {
             if (granted) {
                 start()
             } else {
-                toast("授权失败，无法打开相册")
+                toast(R.string.common_not_grant_storage_permission)
             }
         }
     }

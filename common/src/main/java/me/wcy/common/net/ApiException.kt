@@ -1,6 +1,8 @@
 package me.wcy.common.net
 
+import com.blankj.utilcode.util.StringUtils
 import com.google.gson.JsonParseException
+import me.wcy.common.R
 import org.apache.http.conn.ConnectTimeoutException
 import org.json.JSONException
 import retrofit2.HttpException
@@ -26,30 +28,45 @@ open class ApiException(
         fun build(e: Throwable): ApiException {
             return when (e) {
                 is HttpException -> {
-                    ApiException(e.code(), "网络异常(${e.code()},${e.message()})")
+                    ApiException(
+                        e.code(),
+                        "${StringUtils.getString(R.string.common_net_error)}(${e.code()},${e.message()})"
+                    )
                 }
 
                 is UnknownHostException -> {
-                    ApiException(CODE_NET_ERROR, "网络连接失败，请检查后再试")
+                    ApiException(
+                        CODE_NET_ERROR,
+                        StringUtils.getString(R.string.common_net_unavailable)
+                    )
                 }
 
                 is ConnectTimeoutException,
                 is SocketTimeoutException -> {
-                    ApiException(CODE_TIMEOUT, "请求超时，请稍后再试")
+                    ApiException(CODE_TIMEOUT, StringUtils.getString(R.string.common_net_timeout))
                 }
 
                 is IOException -> {
-                    ApiException(CODE_NET_ERROR, "网络异常(${e.message})")
+                    ApiException(
+                        CODE_NET_ERROR,
+                        "${StringUtils.getString(R.string.common_net_error)}(${e.message})"
+                    )
                 }
 
                 is JsonParseException,
                 is JSONException -> {
                     // Json解析失败
-                    ApiException(CODE_JSON_PARSE_ERROR, "数据解析错误，请稍后再试")
+                    ApiException(
+                        CODE_JSON_PARSE_ERROR,
+                        StringUtils.getString(R.string.common_net_data_parse_error)
+                    )
                 }
 
                 else -> {
-                    ApiException(CODE_SERVER_ERROR, "系统错误(${e.message})")
+                    ApiException(
+                        CODE_SERVER_ERROR,
+                        "${StringUtils.getString(R.string.common_net_system_error)}(${e.message})"
+                    )
                 }
             }
         }

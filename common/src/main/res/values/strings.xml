@@ -1,8 +1,23 @@
-<?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="common_tips">Hint</string>
-    <string name="common_confirm">Sure</string>
-    <string name="common_cancel">Cancel</string>
-    <string name="common_empty">Nothing here</string>
-    <string name="common_retry">Retry</string>
+    <string name="common_tips">提示</string>
+    <string name="common_confirm">确定</string>
+    <string name="common_cancel">取消</string>
+    <string name="common_empty">这里什么都没有</string>
+    <string name="common_retry">重试</string>
+    <string name="common_loading">加载中…</string>
+    <string name="common_album">相册</string>
+    <string name="common_capture">拍照</string>
+    <string name="common_image_save_fail">图片保存失败</string>
+    <string name="common_share_fail">分享失败</string>
+    <string name="common_not_grant_storage_permission">未授予存储权限</string>
+    <string name="common_save_fail">保存失败</string>
+    <string name="common_save_fail_partially">部分保存失败</string>
+    <string name="common_wechat">微信</string>
+    <string name="common_weibo">微博</string>
+    <string name="common_not_install">未安装</string>
+    <string name="common_net_error">网络异常</string>
+    <string name="common_net_unavailable">网络连接失败</string>
+    <string name="common_net_timeout">网络连接超时</string>
+    <string name="common_net_data_parse_error">数据解析错误</string>
+    <string name="common_net_system_error">系统错误</string>
 </resources>
