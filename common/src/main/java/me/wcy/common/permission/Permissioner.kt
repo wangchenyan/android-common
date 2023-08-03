@@ -123,7 +123,7 @@ object Permissioner {
     }
 
     fun hasNotificationPermission(context: Context): Boolean {
-        return if (AndroidVersionUtils.isAboveOrEqual13()) {
+        return if (AndroidVersionUtils.isAboveOrEqual13() && AndroidVersionUtils.isTargetAboveOrEqual13()) {
             SoulPermission.getInstance()
                 .checkSinglePermission(Manifest.permission.POST_NOTIFICATIONS).isGranted
         } else {
@@ -133,7 +133,7 @@ object Permissioner {
 
     @MainThread
     fun requestNotificationPermission(context: Context, callback: PermissionCallback?) {
-        if (AndroidVersionUtils.isAboveOrEqual13()) {
+        if (AndroidVersionUtils.isAboveOrEqual13() && AndroidVersionUtils.isTargetAboveOrEqual13()) {
             requestPermission(context, Manifest.permission.POST_NOTIFICATIONS, callback)
         } else {
             SoulPermission.getInstance().checkAndRequestPermission(

@@ -10,6 +10,7 @@
     <string name="common_image_save_fail">图片保存失败</string>
     <string name="common_share_fail">分享失败</string>
     <string name="common_not_grant_storage_permission">未授予存储权限</string>
+    <string name="common_not_grant_camera_permission">未授予拍照权限</string>
     <string name="common_save_fail">保存失败</string>
     <string name="common_save_fail_partially">部分保存失败</string>
     <string name="common_wechat">微信</string>

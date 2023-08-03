@@ -5,7 +5,7 @@ import me.wcy.common.ui.fragment.SimpleRefreshFragment
 import me.wcy.radapter3.RAdapter
 import me.wcy.radapter3.RItemBinder
 import me.wcy.router.annotation.Route
-import top.wangchenyan.android_common.databinding.ItemSimpleBinding
+import top.wangchenyan.android_common.databinding.ItemRefreshListBinding
 
 /**
  * Created by wangchenyan.top on 2023/4/16.
@@ -39,8 +39,8 @@ class ExampleRefreshFragment : SimpleRefreshFragment<String>() {
         return CommonResult.success(list)
     }
 
-    class TextViewBinder : RItemBinder<ItemSimpleBinding, String>() {
-        override fun onBind(viewBinding: ItemSimpleBinding, item: String, position: Int) {
+    class TextViewBinder : RItemBinder<ItemRefreshListBinding, String>() {
+        override fun onBind(viewBinding: ItemRefreshListBinding, item: String, position: Int) {
             viewBinding.root.text = item
         }
     }

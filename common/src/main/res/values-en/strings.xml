@@ -10,6 +10,7 @@
     <string name="common_image_save_fail">Failed to save image</string>
     <string name="common_share_fail">Share failed</string>
     <string name="common_not_grant_storage_permission">Storage permission not granted</string>
+    <string name="common_not_grant_camera_permission">Camera permission not granted</string>
     <string name="common_save_fail">Save failed</string>
     <string name="common_save_fail_partially">Partial save failed</string>
     <string name="common_wechat">WeChat</string>

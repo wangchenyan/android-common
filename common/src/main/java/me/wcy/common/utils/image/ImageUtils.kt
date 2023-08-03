@@ -92,22 +92,36 @@ object ImageUtils {
 
     fun save2Album(
         context: Context,
+        bitmap: Bitmap,
+        format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
+        callback: (CommonResult<Unit>) -> Unit
+    ) {
+        Permissioner.requestStoragePermission(context) { granted, _ ->
+            if (granted) {
+                com.blankj.utilcode.util.ImageUtils.save2Album(bitmap, format)
+                    ?.also {
+                        callback(CommonResult.success(Unit))
+                    }
+                    ?: kotlin.run {
+                        callback(CommonResult.fail(msg = context.getString(R.string.common_save_fail)))
+                    }
+            } else {
+                callback(CommonResult.fail(msg = context.getString(R.string.common_not_grant_storage_permission)))
+            }
+        }
+    }
+
+    fun save2Album(
+        context: Context,
         url: String,
         format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
         callback: (CommonResult<Unit>) -> Unit
     ) {
-        Permissioner.requestStoragePermission(context) { granted, shouldRationale ->
+        Permissioner.requestStoragePermission(context) { granted, _ ->
             if (granted) {
                 loadBitmap(url) { res ->
                     if (res.isSuccessWithData()) {
-                        com.blankj.utilcode.util.ImageUtils.save2Album(
-                            res.getDataOrThrow(),
-                            format
-                        )?.also {
-                            callback(CommonResult.success(Unit))
-                        } ?: kotlin.run {
-                            callback(CommonResult.fail(msg = context.getString(R.string.common_save_fail)))
-                        }
+                        save2Album(context, res.getDataOrThrow(), format, callback)
                     } else {
                         callback(CommonResult.fail(res.code, res.msg))
                     }
@@ -124,7 +138,7 @@ object ImageUtils {
         format: Bitmap.CompressFormat = Bitmap.CompressFormat.JPEG,
         callback: (CommonResult<Unit>) -> Unit
     ) {
-        Permissioner.requestStoragePermission(context) { granted, shouldRationale ->
+        Permissioner.requestStoragePermission(context) { granted, _ ->
             if (granted) {
                 var saveCount = 0
                 var successCount = 0

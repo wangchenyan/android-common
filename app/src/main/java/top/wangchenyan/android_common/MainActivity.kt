@@ -22,6 +22,9 @@ class MainActivity : BaseActivity() {
         Pair("Share") {
             CRouter.with().url("/share").start()
         },
+        Pair("Permission") {
+            CRouter.with().url("/permission").start()
+        },
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

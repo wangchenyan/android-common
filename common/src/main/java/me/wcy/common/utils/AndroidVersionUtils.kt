@@ -1,6 +1,7 @@
 package me.wcy.common.utils
 
 import android.os.Build
+import com.blankj.utilcode.util.AppUtils
 
 /**
  * Created by wangchenyan.top on 2023/8/2.
@@ -9,6 +10,10 @@ object AndroidVersionUtils {
 
     fun isAboveOrEqual(version: Int): Boolean {
         return Build.VERSION.SDK_INT >= version
+    }
+
+    fun isTargetAboveOrEqual(version: Int): Boolean {
+        return AppUtils.getAppTargetSdkVersion() >= version
     }
 
     fun isAboveOrEqual6(): Boolean {
@@ -41,5 +46,9 @@ object AndroidVersionUtils {
 
     fun isAboveOrEqual13(): Boolean {
         return isAboveOrEqual(Build.VERSION_CODES.TIRAMISU)
+    }
+
+    fun isTargetAboveOrEqual13(): Boolean {
+        return isTargetAboveOrEqual(Build.VERSION_CODES.TIRAMISU)
     }
 }
