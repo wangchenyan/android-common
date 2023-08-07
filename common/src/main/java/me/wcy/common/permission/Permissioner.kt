@@ -69,7 +69,9 @@ object Permissioner {
         context: Context,
         callback: PermissionCallback?
     ) {
-        val permissions = if (AndroidVersionUtils.isAboveOrEqual13()) {
+        val permissions = if (AndroidVersionUtils.isAboveOrEqual13()
+            && AndroidVersionUtils.isTargetAboveOrEqual13()
+        ) {
             arrayOf(
                 Manifest.permission.READ_MEDIA_IMAGES,
                 Manifest.permission.READ_MEDIA_AUDIO,
