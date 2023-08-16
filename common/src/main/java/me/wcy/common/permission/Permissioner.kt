@@ -25,6 +25,7 @@ object Permissioner {
         }
     }
 
+    @MainThread
     fun requestPermission(
         context: Context,
         permission: String,
@@ -65,6 +66,19 @@ object Permissioner {
     }
 
     @MainThread
+    fun hasPermissions(context: Context, vararg permissions: String): Boolean {
+        if (permissions.isEmpty()) return false
+        val result = SoulPermission.getInstance().checkPermissions(*permissions)
+        if (result.isEmpty()) return false
+        result.forEach {
+            if (it?.isGranted != true) {
+                return false
+            }
+        }
+        return true
+    }
+
+    @MainThread
     fun requestStoragePermission(
         context: Context,
         callback: PermissionCallback?
@@ -92,12 +106,35 @@ object Permissioner {
     }
 
     @MainThread
+    fun hasStoragePermission(context: Context): Boolean {
+        val permissions = if (AndroidVersionUtils.isAboveOrEqual13()
+            && AndroidVersionUtils.isTargetAboveOrEqual13()
+        ) {
+            arrayOf(
+                Manifest.permission.READ_MEDIA_IMAGES,
+                Manifest.permission.READ_MEDIA_AUDIO,
+                Manifest.permission.READ_MEDIA_VIDEO,
+            )
+        } else {
+            arrayOf(
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+        }
+        return hasPermissions(context, *permissions)
+    }
+
+    @MainThread
     fun requestPhonePermission(
         context: Context,
         callback: PermissionCallback?
     ) {
         requestPermission(context, Manifest.permission.READ_PHONE_STATE, callback)
     }
+
+    @MainThread
+    fun hasPhonePermission(context: Context): Boolean =
+        hasPermissions(context, Manifest.permission.READ_PHONE_STATE)
 
     @MainThread
     fun requestCameraPermission(
@@ -108,26 +145,12 @@ object Permissioner {
     }
 
     @MainThread
-    fun requestCameraStoragePermission(
-        context: Context,
-        callback: PermissionCallback?
-    ) {
-        requestPermissions(
-            context,
-            arrayOf(
-                Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                Manifest.permission.CAMERA
-            ),
-        ) { allGranted, grantedList, deniedList, shouldRationale ->
-            callback?.invoke(allGranted, shouldRationale)
-        }
-    }
+    fun hasCameraPermission(context: Context): Boolean =
+        hasPermissions(context, Manifest.permission.CAMERA)
 
     fun hasNotificationPermission(context: Context): Boolean {
         return if (AndroidVersionUtils.isAboveOrEqual13() && AndroidVersionUtils.isTargetAboveOrEqual13()) {
-            SoulPermission.getInstance()
-                .checkSinglePermission(Manifest.permission.POST_NOTIFICATIONS).isGranted
+            hasPermissions(context, Manifest.permission.POST_NOTIFICATIONS)
         } else {
             SoulPermission.getInstance().checkSpecialPermission(Special.NOTIFICATION)
         }
