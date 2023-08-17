@@ -12,8 +12,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.ScrollView
 import android.widget.TextView
-import androidx.annotation.ColorRes
-import androidx.annotation.DrawableRes
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
@@ -277,38 +275,9 @@ class TitleLayout @JvmOverloads constructor(
 
     private fun getTitleConfig(): TitleLayoutConfig {
         return try {
-            CommonApp.config.title
+            CommonApp.config.titleLayoutConfig
         } catch (t: Throwable) {
-            DefaultTitleLayoutConfig()
+            TitleLayoutConfig.Builder().build()
         }
-    }
-
-    interface TitleLayoutConfig {
-        val isStatusBarDarkFontWhenAuto: Boolean
-
-        @get:ColorRes
-        val textColorBlack: Int
-
-        @get:ColorRes
-        val textColorWhite: Int
-
-        @get:ColorRes
-        val textColorAuto: Int
-
-        @get:DrawableRes
-        val backIcon: Int
-    }
-
-    class DefaultTitleLayoutConfig : TitleLayoutConfig {
-        override val isStatusBarDarkFontWhenAuto: Boolean
-            get() = true
-        override val textColorBlack: Int
-            get() = R.color.common_text_h1_color
-        override val textColorWhite: Int
-            get() = R.color.white
-        override val textColorAuto: Int
-            get() = R.color.common_text_h1_color
-        override val backIcon: Int
-            get() = R.drawable.common_ic_title_back
     }
 }

@@ -22,7 +22,7 @@ object ToastUtils {
         if (text.isEmpty()) {
             return
         }
-        val mode = if (CommonApp.config.isDarkMode) MODE.LIGHT else MODE.DARK
+        val mode = if (CommonApp.config.isDarkMode()) MODE.LIGHT else MODE.DARK
         com.blankj.utilcode.util.ToastUtils.make()
             .setMode(mode)
             .setGravity(Gravity.CENTER, 0, 0)

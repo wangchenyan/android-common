@@ -14,7 +14,7 @@ const val TAG = "ApiCaller"
 
 suspend inline fun <T> apiCall(crossinline call: suspend CoroutineScope.() -> NetResult<T>): NetResult<T> {
     return withContext(Dispatchers.IO) {
-        CommonApp.config.apiCaller.beforeApiCall()
+        CommonApp.config.apiConfig.beforeApiCall()
         val res: NetResult<T> = try {
             call()
         } catch (e: Throwable) {
@@ -22,9 +22,11 @@ suspend inline fun <T> apiCall(crossinline call: suspend CoroutineScope.() -> Ne
             ApiException.build(e).toResult()
         }
 
-        if (res.code == ApiException.CODE_AUTH_INVALID) {
+        val config = CommonApp.config.apiConfig
+
+        if (res.code in config.authInvalidCodes) {
             Log.e(TAG, "request auth invalid")
-            CommonApp.config.apiCaller.onAuthInvalid()
+            config.onAuthInvalid()
         }
         return@withContext res
     }
@@ -32,10 +34,4 @@ suspend inline fun <T> apiCall(crossinline call: suspend CoroutineScope.() -> Ne
 
 fun <T> ApiException.toResult(): NetResult<T> {
     return NetResult(code, message)
-}
-
-interface ApiCallerEvent {
-    suspend fun onAuthInvalid()
-
-    suspend fun beforeApiCall() {}
 }

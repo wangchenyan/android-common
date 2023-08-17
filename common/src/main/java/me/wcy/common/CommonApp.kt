@@ -35,20 +35,22 @@ object CommonApp {
 
     val test: Boolean by lazy { config.test }
 
-    private val appForegroundInternal = MutableLiveData(false)
-    val appForeground = appForegroundInternal.toUnMutable()
+    private val _appForeground = MutableLiveData(AppUtils.isAppForeground())
+    val appForeground = _appForeground.toUnMutable()
 
-    fun init(config: CommonConfig) {
-        _config = config
+    fun init(block: CommonConfig.Builder.() -> Unit) {
+        val builder = CommonConfig.Builder()
+        builder.block()
+        _config = builder.build()
         FileDownloader.setupOnApplicationOnCreate(app)
         GsonUtils.setGsonDelegate(me.wcy.common.utils.GsonUtils.gson)
         AppUtils.registerAppStatusChangedListener(object : OnAppStatusChangedListener {
             override fun onForeground(activity: Activity?) {
-                appForegroundInternal.value = true
+                _appForeground.value = true
             }
 
             override fun onBackground(activity: Activity?) {
-                appForegroundInternal.value = false
+                _appForeground.value = false
             }
         })
     }

@@ -14,7 +14,12 @@ class SimpleApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        CommonApp.init(CommonConfigImpl())
+        CommonApp.init {
+            test = true
+            imageLoaderConfig {
+                placeholder = R.mipmap.ic_launcher
+            }
+        }
         initCRouter()
     }
 

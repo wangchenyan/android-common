@@ -20,7 +20,6 @@ open class ApiException(
 ) : RuntimeException(message, cause) {
     companion object {
         const val CODE_NET_ERROR = 400
-        const val CODE_AUTH_INVALID = 401
         const val CODE_TIMEOUT = 408
         const val CODE_JSON_PARSE_ERROR = 4000
         const val CODE_SERVER_ERROR = 500

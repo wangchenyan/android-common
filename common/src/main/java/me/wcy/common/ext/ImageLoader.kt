@@ -3,7 +3,6 @@ package me.wcy.common.ext
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
-import androidx.annotation.DrawableRes
 import com.blankj.utilcode.util.ActivityUtils
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
@@ -12,7 +11,6 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.CustomTarget
 import com.bumptech.glide.request.transition.Transition
 import me.wcy.common.CommonApp
-import me.wcy.common.R
 
 /**
  * Created by wangchenyan on 2018/8/23.
@@ -58,7 +56,7 @@ private fun ImageView?.load(url: Any?, avatar: Boolean, round: Boolean, corners:
         return
     }
 
-    val imageLoaderConfig = CommonApp.config.imageLoader
+    val imageLoaderConfig = CommonApp.config.imageLoaderConfig
     val placeholder = if (avatar) {
         imageLoaderConfig.placeholderAvatar
     } else if (round) {
@@ -106,18 +104,4 @@ fun ImageView?.loadBitmap(url: Any?, placeholder: Int = 0) {
                 this@loadBitmap.setImageBitmap(resource)
             }
         })
-}
-
-interface ImageLoaderConfig {
-    @get:DrawableRes
-    val placeholder: Int
-        get() = R.drawable.common_bg_image_placeholder
-
-    @get:DrawableRes
-    val placeholderRound: Int
-        get() = R.drawable.common_bg_image_placeholder_round
-
-    @get:DrawableRes
-    val placeholderAvatar: Int
-        get() = R.drawable.common_bg_image_placeholder_round
 }
