@@ -22,7 +22,7 @@ android {
 
 dependencies {
     api("androidx.appcompat:appcompat:1.6.1")
-    api("androidx.fragment:fragment-ktx:1.6.0")
+    api("androidx.fragment:fragment-ktx:1.6.1")
     api("com.google.android.material:material:1.9.0")
     api("com.google.code.gson:gson:2.10.1")
     api("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
@@ -33,7 +33,7 @@ dependencies {
     api("io.github.scwang90:refresh-layout-kernel:2.0.5")
     api("io.github.scwang90:refresh-header-material:2.0.5")
     api("io.github.scwang90:refresh-footer-classics:2.0.5")
-    api("com.github.wangchenyan.crouter:crouter-api:2.3.0-beta01")
+    api("com.github.wangchenyan.crouter:crouter-api:2.4.0-beta01")
     api("com.github.wangchenyan:radapter3:3.1.1")
     api("com.kingja.loadsir:loadsir:1.3.8")
     api("com.geyifeng.immersionbar:immersionbar:3.2.2")

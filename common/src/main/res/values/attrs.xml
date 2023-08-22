@@ -18,6 +18,7 @@
         <attr name="tlBackCloseStyle" format="boolean" />
         <attr name="tlTitleContentLayout" format="reference" />
         <attr name="tlTitleText" format="string" />
+        <attr name="tlTitleCenter" format="boolean" />
         <attr name="tlBackgroundDrawable" format="reference" />
         <attr name="tlBackgroundColor" format="color" />
     </declare-styleable>

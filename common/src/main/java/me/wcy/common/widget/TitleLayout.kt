@@ -5,16 +5,20 @@ import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.Drawable
 import android.util.AttributeSet
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.LinearLayout
-import android.widget.ScrollView
+import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
 import com.blankj.utilcode.util.ActivityUtils
@@ -36,7 +40,7 @@ class TitleLayout @JvmOverloads constructor(
     attrs: AttributeSet? = null,
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
-    private val binding: CommonTitleLayoutBinding
+    private val viewBinding: CommonTitleLayoutBinding
     private val scrollThreshold: Float
     private var startTextStyle = TextStyle.AUTO
     private var endTextStyle = TextStyle.AUTO
@@ -63,7 +67,7 @@ class TitleLayout @JvmOverloads constructor(
         id = R.id.common_title_layout
         orientation = VERTICAL
         isClickable = true
-        binding = CommonTitleLayoutBinding.inflate(LayoutInflater.from(context), this, true)
+        viewBinding = CommonTitleLayoutBinding.inflate(LayoutInflater.from(context), this, true)
 
         val ta = context.obtainStyledAttributes(attrs, R.styleable.TitleLayout)
         val startTextStyleStr = ta.getInt(R.styleable.TitleLayout_tlTextStyle, 0)
@@ -83,6 +87,7 @@ class TitleLayout @JvmOverloads constructor(
             R.layout.common_title_content_default
         )
         val titleText = ta.getString(R.styleable.TitleLayout_tlTitleText)
+        val isTitleCenter = ta.getBoolean(R.styleable.TitleLayout_tlTitleCenter, true)
         var backgroundDrawable: Drawable? = null
         var backgroundColor: Int? = null
         if (ta.hasValue(R.styleable.TitleLayout_tlBackgroundDrawable)) {
@@ -108,16 +113,17 @@ class TitleLayout @JvmOverloads constructor(
         }
 
         if (isJustShowStatus.not()) {
-            binding.titleContent.isVisible = true
+            viewBinding.root.isVisible = true
             setContentView(contentLayoutId)
             setTitleText(titleText ?: ActivityUtils.getActivityByContext(context)?.title)
             setShowBack(isShowBack)
             setBackCloseStyle(isBackCloseStyle)
-            binding.ivTitleLayoutBack.setOnClickListener {
+            viewBinding.ivBack.setOnClickListener {
                 ActivityUtils.getActivityByContext(context)?.onBackPressed()
             }
+            setTitleCenter(isTitleCenter)
         } else {
-            binding.titleContent.isVisible = false
+            viewBinding.root.isVisible = false
         }
 
         setTextStyle(startTextStyle)
@@ -134,7 +140,7 @@ class TitleLayout @JvmOverloads constructor(
         val statusBarDarkFont: Boolean = when (textStyle) {
             TextStyle.BLACK -> true
             TextStyle.WHITE -> false
-            else -> getTitleConfig().isStatusBarDarkFontWhenAuto
+            else -> getTitleConfig().isStatusBarDarkFontWhenAuto()
         }
         ActivityUtils.getActivityByContext(context)?.apply {
             ImmersionBar.with(this)
@@ -143,9 +149,15 @@ class TitleLayout @JvmOverloads constructor(
         }
         val textColor = getTextColor()
         getTitleTextView()?.setTextColor(textColor)
-        binding.ivTitleLayoutBack.imageTintList = textColor
-        for (i in 0 until binding.titleLayoutMenuContainer.childCount) {
-            val menuView = binding.titleLayoutMenuContainer.getChildAt(i)
+        viewBinding.ivBack.imageTintList = textColor
+        viewBinding.leftMenuContainer.forEach { menuView ->
+            if (menuView is ImageView && menuView.getTag(R.id.common_tl_menu_day_night) == true) {
+                menuView.imageTintList = textColor
+            } else if (menuView is TextView && menuView !is Button) {
+                menuView.setTextColor(textColor)
+            }
+        }
+        viewBinding.rightMenuContainer.forEach { menuView ->
             if (menuView is ImageView && menuView.getTag(R.id.common_tl_menu_day_night) == true) {
                 menuView.imageTintList = textColor
             } else if (menuView is TextView && menuView !is Button) {
@@ -155,21 +167,21 @@ class TitleLayout @JvmOverloads constructor(
     }
 
     fun setShowBack(show: Boolean) {
-        binding.ivTitleLayoutBack.isVisible = show
+        viewBinding.ivBack.isVisible = show
     }
 
     fun setBackCloseStyle(isCloseStyle: Boolean) {
-        binding.ivTitleLayoutBack.setImageResource(
+        viewBinding.ivBack.setImageResource(
             if (isCloseStyle) {
-                getTitleConfig().backIcon
+                getTitleConfig().closeIcon()
             } else {
-                getTitleConfig().backIcon
+                getTitleConfig().backIcon()
             }
         )
     }
 
     fun getTitleTextView(): TextView? {
-        return findViewById(R.id.tvDefaultTitle) as? TextView
+        return findViewById(R.id.common_title_text_view) as? TextView
     }
 
     fun setTitleText(@StringRes resId: Int) {
@@ -185,9 +197,26 @@ class TitleLayout @JvmOverloads constructor(
     }
 
     fun setContentView(@LayoutRes resId: Int) {
-        contentView = LayoutInflater.from(context).inflate(resId, binding.titleLayoutContent, false)
-        binding.titleLayoutContent.removeAllViews()
-        binding.titleLayoutContent.addView(contentView)
+        contentView = LayoutInflater.from(context).inflate(resId, viewBinding.titleContent, false)
+        viewBinding.titleContent.removeAllViews()
+        viewBinding.titleContent.addView(contentView)
+    }
+
+    fun setTitleCenter(isCenter: Boolean) {
+        val contentLp = viewBinding.titleContent.layoutParams as RelativeLayout.LayoutParams
+        contentLp.removeRule(RelativeLayout.END_OF)
+        contentLp.removeRule(RelativeLayout.START_OF)
+        if (isCenter.not()) {
+            contentLp.addRule(RelativeLayout.END_OF, R.id.leftMenuContainer)
+            contentLp.addRule(RelativeLayout.START_OF, R.id.rightMenuContainer)
+        }
+
+        val contentView = getContentView()
+        if (contentView?.id == R.id.common_title_text_view) {
+            val titleLp = contentView.layoutParams as FrameLayout.LayoutParams
+            titleLp.gravity = if (isCenter) Gravity.CENTER else Gravity.CENTER_VERTICAL
+        }
+        requestLayout()
     }
 
     fun bindScrollView(viewId: Int) {
@@ -195,14 +224,14 @@ class TitleLayout @JvmOverloads constructor(
             return
         }
         val view = rootView.findViewById<View>(viewId)
-        if (view is ScrollView && AndroidVersionUtils.isAboveOrEqual6()) {
-            updateTextStyleByScroll(view.scrollY)
-            view.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                updateTextStyleByScroll(scrollY)
-            }
-        } else if (view is NestedScrollView) {
+        if (view is NestedScrollView) {
             updateTextStyleByScroll(view.scrollY)
             view.setOnScrollChangeListener { nestedScrollView: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
+                updateTextStyleByScroll(scrollY)
+            }
+        } else if (AndroidVersionUtils.isAboveOrEqual6()) {
+            updateTextStyleByScroll(view.scrollY)
+            view.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
                 updateTextStyleByScroll(scrollY)
             }
         }
@@ -216,59 +245,62 @@ class TitleLayout @JvmOverloads constructor(
         setTextStyle(if (alpha > 0.5f) endTextStyle else startTextStyle)
     }
 
-    fun addTextMenu(text: CharSequence): TextView {
+    fun addTextMenu(text: CharSequence, isLeft: Boolean = false): TextView {
+        val container = getMenuContainer(isLeft)
         val textBinding = CommonTitleMenuTextBinding.inflate(
-            LayoutInflater.from(context),
-            binding.titleLayoutMenuContainer,
-            false
+            LayoutInflater.from(context), container, true
         )
         textBinding.root.text = text
         textBinding.root.setTextColor(getTextColor())
-        binding.titleLayoutMenuContainer.addView(textBinding.root)
         return textBinding.root
     }
 
-    fun addButtonMenu(text: CharSequence): TextView {
+    fun addButtonMenu(text: CharSequence, isLeft: Boolean = false): TextView {
+        val container = getMenuContainer(isLeft)
         val buttonBinding = CommonTitleMenuButtonBinding.inflate(
-            LayoutInflater.from(context),
-            binding.titleLayoutMenuContainer,
-            false
+            LayoutInflater.from(context), container, true
         )
         buttonBinding.root.text = text
-        binding.titleLayoutMenuContainer.addView(buttonBinding.root)
         return buttonBinding.root
     }
 
-    fun addImageMenu(imageId: Int, isDayNight: Boolean = true): ImageView {
+    fun addImageMenu(imageId: Int, isDayNight: Boolean = true, isLeft: Boolean = false): ImageView {
+        val container = getMenuContainer(isLeft)
         val imageBinding = CommonTitleMenuImageBinding.inflate(
-            LayoutInflater.from(context),
-            binding.titleLayoutMenuContainer,
-            false
+            LayoutInflater.from(context), container, true
         )
         imageBinding.root.setImageResource(imageId)
         if (isDayNight) {
             imageBinding.root.setTag(R.id.common_tl_menu_day_night, true)
         }
-        binding.titleLayoutMenuContainer.addView(imageBinding.root)
         return imageBinding.root
     }
 
-    fun addViewMenu(layoutId: Int): View {
-        val view =
-            LayoutInflater.from(context).inflate(layoutId, binding.titleLayoutMenuContainer, false)
-        binding.titleLayoutMenuContainer.addView(view)
+    fun addViewMenu(layoutId: Int, isLeft: Boolean = false): View {
+        val container = getMenuContainer(isLeft)
+        val view = LayoutInflater.from(context).inflate(layoutId, container, false)
+        viewBinding.rightMenuContainer.addView(view)
         return view
     }
 
     fun removeAllMenu() {
-        binding.titleLayoutMenuContainer.removeAllViews()
+        viewBinding.leftMenuContainer.removeAllViews()
+        viewBinding.rightMenuContainer.removeAllViews()
+    }
+
+    private fun getMenuContainer(isLeft: Boolean): ViewGroup {
+        return if (isLeft) {
+            viewBinding.leftMenuContainer
+        } else {
+            viewBinding.rightMenuContainer
+        }
     }
 
     private fun getTextColor(): ColorStateList {
         val colorResId = when (textStyle) {
-            TextStyle.BLACK -> getTitleConfig().textColorBlack
-            TextStyle.WHITE -> getTitleConfig().textColorWhite
-            TextStyle.AUTO -> getTitleConfig().textColorAuto
+            TextStyle.BLACK -> getTitleConfig().textColorBlack()
+            TextStyle.WHITE -> getTitleConfig().textColorWhite()
+            TextStyle.AUTO -> getTitleConfig().textColorAuto()
         }
         return AppCompatResources.getColorStateList(context, colorResId)
     }

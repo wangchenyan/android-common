@@ -1,18 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/titleContent"
     android:layout_width="match_parent"
     android:layout_height="@dimen/common_title_bar_size">
 
     <FrameLayout
-        android:id="@+id/titleLayoutContent"
+        android:id="@+id/titleContent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true" />
+        android:layout_height="match_parent" />
 
     <ImageView
-        android:id="@+id/ivTitleLayoutBack"
+        android:id="@+id/ivBack"
         android:layout_width="@dimen/common_title_bar_size"
         android:layout_height="@dimen/common_title_bar_size"
         android:layout_centerVertical="true"
@@ -21,7 +19,15 @@
         app:srcCompat="@drawable/common_ic_title_back" />
 
     <LinearLayout
-        android:id="@+id/titleLayoutMenuContainer"
+        android:id="@+id/leftMenuContainer"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_toEndOf="@+id/ivBack"
+        android:gravity="center_vertical"
+        android:orientation="horizontal" />
+
+    <LinearLayout
+        android:id="@+id/rightMenuContainer"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_alignParentEnd="true"

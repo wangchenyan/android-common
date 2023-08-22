@@ -2,4 +2,5 @@
 <resources>
     <item name="common_title_layout" type="id" />
     <item name="common_tl_menu_day_night" type="id" />
+    <item name="common_title_text_view" type="id" />
 </resources>

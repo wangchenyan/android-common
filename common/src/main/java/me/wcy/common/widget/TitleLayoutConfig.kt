@@ -9,19 +9,22 @@ import me.wcy.common.R
  * Created by wangchenyan.top on 2023/8/17.
  */
 class TitleLayoutConfig internal constructor(builder: Builder) {
-    val isStatusBarDarkFontWhenAuto: Boolean
+    val isStatusBarDarkFontWhenAuto: () -> Boolean
 
     @get:ColorRes
-    val textColorBlack: Int
+    val textColorBlack: () -> Int
 
     @get:ColorRes
-    val textColorWhite: Int
+    val textColorWhite: () -> Int
 
     @get:ColorRes
-    val textColorAuto: Int
+    val textColorAuto: () -> Int
 
     @get:DrawableRes
-    val backIcon: Int
+    val backIcon: () -> Int
+
+    @get:DrawableRes
+    val closeIcon: () -> Int
 
     init {
         isStatusBarDarkFontWhenAuto = builder.isStatusBarDarkFontWhenAuto
@@ -29,23 +32,27 @@ class TitleLayoutConfig internal constructor(builder: Builder) {
         textColorWhite = builder.textColorWhite
         textColorAuto = builder.textColorAuto
         backIcon = builder.backIcon
+        closeIcon = builder.closeIcon
     }
 
     @CommonConfigDsl
     class Builder {
-        var isStatusBarDarkFontWhenAuto: Boolean = true
+        var isStatusBarDarkFontWhenAuto: () -> Boolean = { true }
 
         @get:ColorRes
-        var textColorBlack: Int = R.color.common_text_h1_color
+        var textColorBlack: () -> Int = { R.color.common_text_h1_color }
 
         @get:ColorRes
-        var textColorWhite: Int = R.color.white
+        var textColorWhite: () -> Int = { R.color.white }
 
         @get:ColorRes
-        var textColorAuto: Int = R.color.common_text_h1_color
+        var textColorAuto: () -> Int = { R.color.common_text_h1_color }
 
         @get:DrawableRes
-        var backIcon: Int = R.drawable.common_ic_title_back
+        var backIcon: () -> Int = { R.drawable.common_ic_title_back }
+
+        @get:DrawableRes
+        var closeIcon: () -> Int = { R.drawable.common_ic_title_close }
 
         fun build(): TitleLayoutConfig {
             return TitleLayoutConfig(this)
