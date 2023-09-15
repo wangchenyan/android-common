@@ -1,5 +1,6 @@
 package me.wcy.common.ext
 
+import android.annotation.SuppressLint
 import android.graphics.Bitmap
 import android.graphics.drawable.Drawable
 import android.widget.ImageView
@@ -16,27 +17,27 @@ import me.wcy.common.CommonApp
  * Created by wangchenyan on 2018/8/23.
  */
 
-fun ImageView?.load(url: Any?) {
+fun ImageView.load(url: Any?) {
     load(url, avatar = false, round = false, corners = 0)
 }
 
-fun ImageView?.load(url: Any?, round: Boolean) {
+fun ImageView.load(url: Any?, round: Boolean) {
     load(url, avatar = false, round = round, corners = 0)
 }
 
-fun ImageView?.load(url: Any?, corners: Int) {
+fun ImageView.load(url: Any?, corners: Int) {
     load(url, avatar = false, round = false, corners = corners)
 }
 
-fun ImageView?.loadAvatar(url: Any?) {
-    load(url, avatar = true, round = false, corners = 0)
+fun ImageView.loadAvatar(url: Any?, round: Boolean = true) {
+    load(url, avatar = true, round = round, corners = 0)
 }
 
-fun ImageView?.loadGif(url: Any?) {
-    if (this == null) {
-        return
-    }
+fun ImageView.loadAvatar(url: Any?, corners: Int) {
+    load(url, avatar = true, round = false, corners = corners)
+}
 
+fun ImageView.loadGif(url: Any?) {
     if (ActivityUtils.isActivityAlive(this.context).not()) {
         return
     }
@@ -47,15 +48,13 @@ fun ImageView?.loadGif(url: Any?) {
         .into(this)
 }
 
-private fun ImageView?.load(url: Any?, avatar: Boolean, round: Boolean, corners: Int) {
-    if (this == null) {
-        return
-    }
-
-    if (ActivityUtils.isActivityAlive(this.context).not()) {
-        return
-    }
-
+@SuppressLint("CheckResult")
+private fun ImageView.load(
+    url: Any?,
+    avatar: Boolean,
+    round: Boolean,
+    corners: Int,
+) {
     val imageLoaderConfig = CommonApp.config.imageLoaderConfig
     val placeholder = if (avatar) {
         imageLoaderConfig.placeholderAvatar
@@ -64,28 +63,34 @@ private fun ImageView?.load(url: Any?, avatar: Boolean, round: Boolean, corners:
     } else {
         imageLoaderConfig.placeholder
     }
-    setImageResource(placeholder)
-    var builder = Glide.with(this)
-        .load(url)
-        .apply(
-            RequestOptions()
-                .placeholder(placeholder)
-                .error(placeholder)
-        )
-    if (avatar || round) {
-        builder = builder.apply(RequestOptions.circleCropTransform())
-    } else if (corners > 0) {
-        // 圆角和 CenterCrop 不兼容，需同时设置
-        builder = builder.apply(RequestOptions().transform(CenterCrop(), RoundedCorners(corners)))
+
+    load(url) {
+        placeholder(placeholder)
+        error(placeholder)
+
+        if (round) {
+            circleCrop()
+        } else if (corners > 0) {
+            // 圆角和 CenterCrop 不兼容，需同时设置
+            transform(CenterCrop(), RoundedCorners(corners))
+        }
     }
-    builder.into(this)
 }
 
-fun ImageView?.loadBitmap(url: Any?, placeholder: Int = 0) {
-    if (this == null) {
+fun ImageView.load(url: Any?, block: RequestOptions.() -> Unit = {}) {
+    if (ActivityUtils.isActivityAlive(this.context).not()) {
         return
     }
 
+    val requestOptions = RequestOptions()
+    block(requestOptions)
+    Glide.with(this)
+        .load(url)
+        .apply(requestOptions)
+        .into(this)
+}
+
+fun ImageView.loadBitmap(url: Any?, placeholder: Int = 0) {
     if (ActivityUtils.isActivityAlive(this.context).not()) {
         return
     }
