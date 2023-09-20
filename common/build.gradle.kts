@@ -42,6 +42,7 @@ dependencies {
     implementation("top.zibin:Luban:1.1.8")
     implementation("com.github.li-xiaojun:XPopup:2.7.9")
     implementation("com.elvishew:xlog:1.10.1")
+    compileOnly("com.google.dagger:hilt-android:2.44")
 }
 
 afterEvaluate {

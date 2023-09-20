@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView.LayoutManager
 import com.scwang.smart.refresh.footer.ClassicsFooter
 import com.scwang.smart.refresh.header.MaterialHeader
 import com.scwang.smart.refresh.layout.SmartRefreshLayout
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import me.wcy.common.R
 import me.wcy.common.model.CommonResult
@@ -18,6 +19,8 @@ import me.wcy.radapter3.RAdapter
  */
 abstract class BaseRefreshFragment<T> : BaseFragment() {
     protected val adapter = RAdapter<T>()
+    private var refreshJob: Job? = null
+    private var loadMoreJob: Job? = null
     private var page = 1
     private var isSuccess = false
 
@@ -53,22 +56,7 @@ abstract class BaseRefreshFragment<T> : BaseFragment() {
                 onRefresh()
             }
             setOnLoadMoreListener {
-                lifecycleScope.launch {
-                    getData(page + 1).let {
-                        if (it.isSuccess()) {
-                            nextPage()
-                            val data = it.data
-                            if (data?.isNotEmpty() == true) {
-                                adapter.addAll(data)
-                                getRefreshLayout().finishLoadMore()
-                            } else {
-                                getRefreshLayout().finishLoadMoreWithNoMoreData()
-                            }
-                        } else {
-                            getRefreshLayout().finishLoadMore(false)
-                        }
-                    }
-                }
+                onLoadMore()
             }
         }
         autoRefresh()
@@ -82,7 +70,9 @@ abstract class BaseRefreshFragment<T> : BaseFragment() {
     }
 
     private fun onRefresh() {
-        lifecycleScope.launch {
+        refreshJob?.cancel()
+        loadMoreJob?.cancel()
+        refreshJob = lifecycleScope.launch {
             if (isSuccess.not()) {
                 showLoadSirLoading()
             }
@@ -103,6 +93,27 @@ abstract class BaseRefreshFragment<T> : BaseFragment() {
                 } else {
                     isSuccess = false
                     showLoadSirError(it.msg)
+                }
+            }
+        }
+    }
+
+    private fun onLoadMore() {
+        refreshJob?.cancel()
+        loadMoreJob?.cancel()
+        loadMoreJob = lifecycleScope.launch {
+            getData(page + 1).let {
+                if (it.isSuccess()) {
+                    nextPage()
+                    val data = it.data
+                    if (data?.isNotEmpty() == true) {
+                        adapter.addAll(data)
+                        getRefreshLayout().finishLoadMore()
+                    } else {
+                        getRefreshLayout().finishLoadMoreWithNoMoreData()
+                    }
+                } else {
+                    getRefreshLayout().finishLoadMore(false)
                 }
             }
         }

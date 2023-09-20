@@ -1,8 +1,11 @@
 package me.wcy.common.ext
 
 import android.app.Activity
+import android.app.Application
 import android.content.Context
-import androidx.viewbinding.ViewBinding
+import android.content.ContextWrapper
+import androidx.lifecycle.LifecycleOwner
+import dagger.hilt.android.EntryPointAccessors
 
 fun Activity?.setAlpha(alpha: Float) {
     if (this == null) {
@@ -13,5 +16,26 @@ fun Activity?.setAlpha(alpha: Float) {
     window.attributes = lp
 }
 
-val ViewBinding.context: Context
-    get() = root.context
+inline fun <reified T : Any> Application.accessEntryPoint(): T {
+    return EntryPointAccessors.fromApplication(this, T::class.java)
+}
+
+fun Context.findActivity(): Activity? {
+    return when (this) {
+        is Activity -> this
+
+        is ContextWrapper -> this.baseContext?.findActivity()
+
+        else -> null
+    }
+}
+
+fun Context.findLifecycleOwner(): LifecycleOwner? {
+    return when (this) {
+        is LifecycleOwner -> this
+
+        is ContextWrapper -> this.baseContext?.findLifecycleOwner()
+
+        else -> null
+    }
+}

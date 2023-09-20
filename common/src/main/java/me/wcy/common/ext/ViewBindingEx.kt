@@ -1,6 +1,7 @@
 package me.wcy.common.ext
 
 import android.app.Activity
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.annotation.MainThread
@@ -21,6 +22,9 @@ inline fun <reified VB : ViewBinding> Activity.viewBindings(): Lazy<VB> {
 inline fun <reified VB : ViewBinding> Fragment.viewBindings(): Lazy<VB> {
     return ViewBindingLazy(VB::class, { layoutInflater })
 }
+
+val ViewBinding.context: Context
+    get() = root.context
 
 class ViewBindingLazy<VB : ViewBinding>(
     private val viewBindingClass: KClass<VB>,
