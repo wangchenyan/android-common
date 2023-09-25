@@ -18,6 +18,7 @@ import android.widget.TextView
 import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.core.content.res.getBooleanOrThrow
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
 import androidx.core.widget.NestedScrollView
@@ -90,7 +91,11 @@ class TitleLayout @JvmOverloads constructor(
             R.layout.common_title_content_default
         )
         val titleText = ta.getString(R.styleable.TitleLayout_tlTitleText)
-        val isTitleCenter = ta.getBoolean(R.styleable.TitleLayout_tlTitleCenter, true)
+        val isTitleCenter = try {
+            ta.getBooleanOrThrow(R.styleable.TitleLayout_tlTitleCenter)
+        } catch (e: Exception) {
+            getTitleConfig().isTitleCenter
+        }
         var backgroundDrawable: Drawable? = null
         var backgroundColor: Int? = null
         if (ta.hasValue(R.styleable.TitleLayout_tlBackgroundDrawable)) {

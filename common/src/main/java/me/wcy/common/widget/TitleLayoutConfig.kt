@@ -26,6 +26,8 @@ class TitleLayoutConfig internal constructor(builder: Builder) {
     @get:DrawableRes
     val closeIcon: () -> Int
 
+    val isTitleCenter: Boolean
+
     init {
         isStatusBarDarkFontWhenAuto = builder.isStatusBarDarkFontWhenAuto
         textColorBlack = builder.textColorBlack
@@ -33,6 +35,7 @@ class TitleLayoutConfig internal constructor(builder: Builder) {
         textColorAuto = builder.textColorAuto
         backIcon = builder.backIcon
         closeIcon = builder.closeIcon
+        isTitleCenter = builder.isTitleCenter
     }
 
     @CommonConfigDsl
@@ -53,6 +56,8 @@ class TitleLayoutConfig internal constructor(builder: Builder) {
 
         @get:DrawableRes
         var closeIcon: () -> Int = { R.drawable.common_ic_title_close }
+
+        var isTitleCenter = true
 
         fun build(): TitleLayoutConfig {
             return TitleLayoutConfig(this)
