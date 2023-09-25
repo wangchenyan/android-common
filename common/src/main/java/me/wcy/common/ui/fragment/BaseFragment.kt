@@ -11,7 +11,7 @@ abstract class BaseFragment : LoadingFragment(), BackEventInterceptor {
 
     override fun onResume() {
         super.onResume()
-        getTitleLayout()?.updateTextStyle()
+        getTitleLayout()?.applyTextStyle()
     }
 
     @ColorRes

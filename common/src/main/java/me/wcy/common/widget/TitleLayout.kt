@@ -42,15 +42,16 @@ class TitleLayout @JvmOverloads constructor(
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val viewBinding: CommonTitleLayoutBinding
     private val scrollThreshold: Float
-    private var startTextStyle = TextStyle.AUTO
-    private var endTextStyle = TextStyle.AUTO
-    private var textStyle = TextStyle.AUTO
+    private val updateTitleAlphaWhenScroll: Boolean
+    private var startTextStyle: TextStyle = TextStyle.AUTO
+    private var endTextStyle: TextStyle = TextStyle.AUTO
+    private var currTextStyle: TextStyle = TextStyle.AUTO
     private var contentView: View? = null
 
-    enum class TextStyle(val value: Int) {
-        AUTO(0),
-        BLACK(1),
-        WHITE(2);
+    sealed class TextStyle(val value: Int) {
+        object AUTO : TextStyle(0)
+        object BLACK : TextStyle(1)
+        object WHITE : TextStyle(2)
 
         companion object {
             fun valueOf(value: Int): TextStyle {
@@ -79,6 +80,8 @@ class TitleLayout @JvmOverloads constructor(
             R.styleable.TitleLayout_tlScrollThreshold,
             SizeUtils.dp2px(100f).toFloat()
         )
+        updateTitleAlphaWhenScroll =
+            ta.getBoolean(R.styleable.TitleLayout_tlUpdateTitleAlphaWhenScroll, false)
         val isJustShowStatus = ta.getBoolean(R.styleable.TitleLayout_tlJustShowStatusBar, false)
         val isShowBack = ta.getBoolean(R.styleable.TitleLayout_tlShowBack, true)
         val isBackCloseStyle = ta.getBoolean(R.styleable.TitleLayout_tlBackCloseStyle, false)
@@ -126,18 +129,18 @@ class TitleLayout @JvmOverloads constructor(
             viewBinding.root.isVisible = false
         }
 
-        setTextStyle(startTextStyle)
+        setCurrTextStyle(startTextStyle)
 
         post { bindScrollView(scrollViewId) }
     }
 
-    fun setTextStyle(style: TextStyle) {
-        textStyle = style
-        updateTextStyle()
+    fun setCurrTextStyle(style: TextStyle) {
+        currTextStyle = style
+        applyTextStyle()
     }
 
-    fun updateTextStyle() {
-        val statusBarDarkFont: Boolean = when (textStyle) {
+    fun applyTextStyle() {
+        val statusBarDarkFont: Boolean = when (currTextStyle) {
             TextStyle.BLACK -> true
             TextStyle.WHITE -> false
             else -> getTitleConfig().isStatusBarDarkFontWhenAuto()
@@ -225,24 +228,27 @@ class TitleLayout @JvmOverloads constructor(
         }
         val view = rootView.findViewById<View>(viewId)
         if (view is NestedScrollView) {
-            updateTextStyleByScroll(view.scrollY)
+            updateScroll(view.scrollY)
             view.setOnScrollChangeListener { nestedScrollView: NestedScrollView?, scrollX: Int, scrollY: Int, oldScrollX: Int, oldScrollY: Int ->
-                updateTextStyleByScroll(scrollY)
+                updateScroll(scrollY)
             }
         } else if (AndroidVersionUtils.isAboveOrEqual6()) {
-            updateTextStyleByScroll(view.scrollY)
+            updateScroll(view.scrollY)
             view.setOnScrollChangeListener { v, scrollX, scrollY, oldScrollX, oldScrollY ->
-                updateTextStyleByScroll(scrollY)
+                updateScroll(scrollY)
             }
         }
     }
 
-    private fun updateTextStyleByScroll(scrollY: Int) {
+    fun updateScroll(scrollY: Int) {
         var alpha = scrollY.toFloat() / scrollThreshold
         alpha = max(0f, alpha)
         alpha = min(1f, alpha)
         background?.alpha = (alpha * 255).toInt()
-        setTextStyle(if (alpha > 0.5f) endTextStyle else startTextStyle)
+        if (updateTitleAlphaWhenScroll) {
+            getTitleTextView()?.alpha = alpha
+        }
+        setCurrTextStyle(if (alpha > 0.5f) endTextStyle else startTextStyle)
     }
 
     fun addTextMenu(text: CharSequence, isLeft: Boolean = false): TextView {
@@ -297,7 +303,7 @@ class TitleLayout @JvmOverloads constructor(
     }
 
     private fun getTextColor(): ColorStateList {
-        val colorResId = when (textStyle) {
+        val colorResId = when (currTextStyle) {
             TextStyle.BLACK -> getTitleConfig().textColorBlack()
             TextStyle.WHITE -> getTitleConfig().textColorWhite()
             TextStyle.AUTO -> getTitleConfig().textColorAuto()

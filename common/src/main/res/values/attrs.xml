@@ -14,6 +14,7 @@
         <attr name="tlJustShowStatusBar" format="boolean" />
         <attr name="tlScrollViewId" format="reference" />
         <attr name="tlScrollThreshold" format="dimension" />
+        <attr name="tlUpdateTitleAlphaWhenScroll" format="boolean" />
         <attr name="tlShowBack" format="boolean" />
         <attr name="tlBackCloseStyle" format="boolean" />
         <attr name="tlTitleContentLayout" format="reference" />
