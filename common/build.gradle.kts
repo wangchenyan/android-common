@@ -50,6 +50,9 @@ afterEvaluate {
         publications {
             create<MavenPublication>("maven") {
                 from(components["release"])
+                groupId = "com.github.wangchenyan"
+                artifactId = "android-common"
+                version = "local"
             }
         }
     }
