@@ -5,6 +5,5 @@
     android:layout_height="48dp"
     android:gravity="center"
     android:paddingHorizontal="16dp"
-    android:textColor="@color/black"
     android:textSize="16dp"
     tools:text="Demo" />

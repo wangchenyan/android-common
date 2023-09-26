@@ -18,15 +18,20 @@ open class FragmentContainerActivity : BaseActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val uri: Uri = intent.getParcelableExtra(CRouter.CROUTER_KEY_FRAGMENT_URI) ?: kotlin.run {
-            if (CommonApp.test) {
-                throw IllegalStateException("FragmentContainerActivity only can be started by CRouter!")
-            } else {
-                Log.e(TAG, "FragmentContainerActivity only can be started by CRouter!")
-                finish()
-                return
-            }
+        if (supportFragmentManager.findFragmentByTag(TAG_FRAGMENT) != null) {
+            return
         }
+
+        val uri: Uri =
+            intent.getParcelableExtra(CRouter.CROUTER_KEY_FRAGMENT_URI) ?: kotlin.run {
+                if (CommonApp.test) {
+                    throw IllegalStateException("FragmentContainerActivity only can be started by CRouter!")
+                } else {
+                    Log.e(TAG, "FragmentContainerActivity only can be started by CRouter!")
+                    finish()
+                    return
+                }
+            }
         val clazz = CRouter.with(this).uri(uri).getFragmentX() ?: kotlin.run {
             if (CommonApp.test) {
                 throw IllegalStateException("Can not find fragment by uri: $uri")
@@ -41,7 +46,7 @@ open class FragmentContainerActivity : BaseActivity() {
             fragment.arguments = intent.extras
             fragment.arguments?.remove(CRouter.CROUTER_KEY_FRAGMENT_URI)
             val transaction = supportFragmentManager.beginTransaction()
-            transaction.add(android.R.id.content, fragment)
+            transaction.add(android.R.id.content, fragment, TAG_FRAGMENT)
             transaction.commitNowAllowingStateLoss()
         }
     }
@@ -63,5 +68,6 @@ open class FragmentContainerActivity : BaseActivity() {
 
     companion object {
         private const val TAG = "FragmentContainerAct"
+        private const val TAG_FRAGMENT = "fragment_in_container"
     }
 }
