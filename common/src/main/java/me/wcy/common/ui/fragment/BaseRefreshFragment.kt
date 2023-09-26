@@ -42,6 +42,7 @@ abstract class BaseRefreshFragment<T> : BaseFragment() {
         showLoadSirLoading()
         initAdapter(adapter)
         getRecyclerView().apply {
+            initRecyclerView(this)
             layoutManager = this@BaseRefreshFragment.getLayoutManager()
             adapter = this@BaseRefreshFragment.adapter
         }
@@ -133,8 +134,11 @@ abstract class BaseRefreshFragment<T> : BaseFragment() {
 
     abstract suspend fun getData(page: Int): CommonResult<List<T>>
 
-    open fun getLayoutManager(): LayoutManager {
+    protected open fun getLayoutManager(): LayoutManager {
         return LinearLayoutManager(requireContext())
+    }
+
+    protected open fun initRecyclerView(recyclerView: RecyclerView) {
     }
 
     private fun firstPage() {
