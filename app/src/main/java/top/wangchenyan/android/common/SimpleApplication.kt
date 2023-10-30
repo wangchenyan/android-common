@@ -1,4 +1,4 @@
-package top.wangchenyan.android_common
+package top.wangchenyan.android.common
 
 import android.app.Application
 import android.content.Intent

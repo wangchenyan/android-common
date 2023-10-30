@@ -5,10 +5,10 @@ plugins {
 }
 
 android {
-    compileSdk = 33
+    compileSdk = 34
     defaultConfig {
         minSdk = 21
-        targetSdk = 33
+        targetSdk = 34
         consumerProguardFile("consumer-rules.pro")
     }
     compileOptions {
@@ -23,7 +23,7 @@ android {
 dependencies {
     api("androidx.appcompat:appcompat:1.6.1")
     api("androidx.fragment:fragment-ktx:1.6.1")
-    api("com.google.android.material:material:1.9.0")
+    api("com.google.android.material:material:1.10.0")
     api("com.google.code.gson:gson:2.10.1")
     api("com.squareup.okhttp3:okhttp:5.0.0-alpha.11")
     api("com.squareup.retrofit2:retrofit:2.9.0")
@@ -37,12 +37,12 @@ dependencies {
     api("com.github.wangchenyan:radapter3:3.1.1")
     api("com.kingja.loadsir:loadsir:1.3.8")
     api("com.geyifeng.immersionbar:immersionbar:3.2.2")
-    implementation("com.github.soulqw:SoulPermission:1.3.1")
+    implementation("com.github.soulqw:SoulPermission:1.4.0")
     implementation("com.liulishuo.filedownloader:library:1.7.7")
     implementation("top.zibin:Luban:1.1.8")
     implementation("com.github.li-xiaojun:XPopup:2.7.9")
     implementation("com.elvishew:xlog:1.10.1")
-    compileOnly("com.google.dagger:hilt-android:2.44")
+    compileOnly("com.google.dagger:hilt-android:2.48.1")
 }
 
 afterEvaluate {

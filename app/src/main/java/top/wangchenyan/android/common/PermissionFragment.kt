@@ -1,4 +1,4 @@
-package top.wangchenyan.android_common
+package top.wangchenyan.android.common
 
 import android.view.View
 import me.wcy.common.ext.toast
@@ -6,7 +6,7 @@ import me.wcy.common.ext.viewBindings
 import me.wcy.common.permission.Permissioner
 import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.router.annotation.Route
-import top.wangchenyan.android_common.databinding.FragmentPermissionBinding
+import top.wangchenyan.android.common.databinding.FragmentPermissionBinding
 
 /**
  * Created by wangchenyan.top on 2023/8/3.

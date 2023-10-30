@@ -1,11 +1,11 @@
-package top.wangchenyan.android_common
+package top.wangchenyan.android.common
 
 import me.wcy.common.model.CommonResult
 import me.wcy.common.ui.fragment.SimpleRefreshFragment
 import me.wcy.radapter3.RAdapter
 import me.wcy.radapter3.RItemBinder
 import me.wcy.router.annotation.Route
-import top.wangchenyan.android_common.databinding.ItemRefreshListBinding
+import top.wangchenyan.android.common.databinding.ItemRefreshListBinding
 
 /**
  * Created by wangchenyan.top on 2023/4/16.

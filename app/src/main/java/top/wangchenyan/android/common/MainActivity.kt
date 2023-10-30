@@ -1,4 +1,4 @@
-package top.wangchenyan.android_common
+package top.wangchenyan.android.common
 
 import android.os.Bundle
 import me.wcy.common.ext.viewBindings
@@ -6,7 +6,7 @@ import me.wcy.common.ui.activity.BaseActivity
 import me.wcy.common.widget.decoration.MarginDividerDecoration
 import me.wcy.radapter3.RAdapter
 import me.wcy.router.CRouter
-import top.wangchenyan.android_common.databinding.ActivityMainBinding
+import top.wangchenyan.android.common.databinding.ActivityMainBinding
 
 class MainActivity : BaseActivity() {
     private val viewBinding by viewBindings<ActivityMainBinding>()

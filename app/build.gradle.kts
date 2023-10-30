@@ -6,13 +6,13 @@ plugins {
 }
 
 android {
-    namespace = "top.wangchenyan.android_common"
-    compileSdk = 33
+    namespace = "top.wangchenyan.android.common"
+    compileSdk = 34
 
     defaultConfig {
-        applicationId = "top.wangchenyan.android_common"
+        applicationId = "top.wangchenyan.android.common"
         minSdk = 23
-        targetSdk = 33
+        targetSdk = 34
         versionCode = 1
         versionName = "1.0"
     }
@@ -61,9 +61,9 @@ autoregister {
 }
 
 dependencies {
-    implementation("androidx.core:core-ktx:1.10.1")
+    implementation("androidx.core:core-ktx:1.12.0")
     implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.9.0")
+    implementation("com.google.android.material:material:1.10.0")
     implementation("androidx.constraintlayout:constraintlayout:2.1.4")
     ksp("com.github.wangchenyan.crouter:crouter-compiler:2.4.0-beta01")
     implementation(project(":common"))

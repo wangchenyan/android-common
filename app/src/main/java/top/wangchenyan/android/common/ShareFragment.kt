@@ -1,4 +1,4 @@
-package top.wangchenyan.android_common
+package top.wangchenyan.android.common
 
 import android.graphics.BitmapFactory
 import android.view.View
@@ -8,7 +8,7 @@ import me.wcy.common.ui.fragment.BaseFragment
 import me.wcy.common.utils.ShareUtils
 import me.wcy.common.utils.image.ImagePicker
 import me.wcy.router.annotation.Route
-import top.wangchenyan.android_common.databinding.FragmentShareBinding
+import top.wangchenyan.android.common.databinding.FragmentShareBinding
 
 /**
  * Created by wangchenyan.top on 2023/8/2.

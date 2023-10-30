@@ -1,7 +1,7 @@
-package top.wangchenyan.android_common
+package top.wangchenyan.android.common
 
 import me.wcy.radapter3.RItemBinder
-import top.wangchenyan.android_common.databinding.ItemDemoBinding
+import top.wangchenyan.android.common.databinding.ItemDemoBinding
 
 /**
  * Created by wangchenyan.top on 2023/8/2.

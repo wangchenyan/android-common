@@ -10,6 +10,7 @@ import com.qw.soul.permission.bean.Special
 import com.qw.soul.permission.callbcak.CheckRequestPermissionListener
 import com.qw.soul.permission.callbcak.CheckRequestPermissionsListener
 import com.qw.soul.permission.callbcak.SpecialPermissionListener
+import com.qw.soul.permission.checker.CheckerFactory
 import me.wcy.common.utils.AndroidVersionUtils
 
 /**
@@ -67,13 +68,9 @@ object Permissioner {
 
     @MainThread
     fun hasPermissions(context: Context, vararg permissions: String): Boolean {
-        if (permissions.isEmpty()) return false
-        val result = SoulPermission.getInstance().checkPermissions(*permissions)
-        if (result.isEmpty()) return false
-        result.forEach {
-            if (it?.isGranted != true) {
-                return false
-            }
+        permissions.forEach {
+            val granted = CheckerFactory.create(context, it).check()
+            if (granted.not()) return false
         }
         return true
     }
