@@ -24,6 +24,7 @@ import kotlin.coroutines.suspendCoroutine
 object ImageUtils {
 
     fun loadBitmap(url: Any, callback: (CommonResult<Bitmap>) -> Unit) {
+        var mutableCallback: ((CommonResult<Bitmap>) -> Unit)? = callback
         Glide.with(CommonApp.app)
             .asBitmap()
             .load(url)
@@ -32,12 +33,14 @@ object ImageUtils {
                 }
 
                 override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
-                    callback(CommonResult.success(resource))
+                    mutableCallback?.invoke(CommonResult.success(resource))
+                    mutableCallback = null
                 }
 
                 override fun onLoadFailed(errorDrawable: Drawable?) {
                     super.onLoadFailed(errorDrawable)
-                    callback(CommonResult.fail())
+                    mutableCallback?.invoke(CommonResult.fail())
+                    mutableCallback = null
                 }
             })
     }
