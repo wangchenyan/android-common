@@ -25,6 +25,9 @@ class MainActivity : BaseActivity() {
         Pair("Permission") {
             CRouter.with().url("/permission").start()
         },
+        Pair("Api") {
+            CRouter.with().url("/api").start()
+        },
     )
 
     override fun onCreate(savedInstanceState: Bundle?) {

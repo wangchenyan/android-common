@@ -1,22 +1,24 @@
 package me.wcy.common.net
 
-import com.google.gson.annotations.SerializedName
+import me.wcy.common.CommonApp
 import me.wcy.common.model.CommonResult
 import java.io.Serializable
 
 data class NetResult<T>(
-    @SerializedName("code") var code: Int = Integer.MIN_VALUE,
-    @SerializedName("msg", alternate = ["message"]) var msg: String? = null,
-    @SerializedName("data", alternate = ["result"]) var data: T? = null,
-    @SerializedName("total") val total: Int = 0,
+    var code: Int = Integer.MIN_VALUE,
+    var msg: String? = null,
+    var data: T? = null,
+    val total: Int = 0,
 ) : Serializable {
-    fun isSuccess(): Boolean = (code == 200)
+    fun isSuccess(): Boolean = (code == getApiConfig().successCode)
 
-    fun isSuccessWithData(): Boolean = (code == 200 && data != null)
+    fun isSuccessWithData(): Boolean = (code == getApiConfig().successCode && data != null)
 
     fun getDataOrThrow(): T = data!!
 
     fun toCommonResult(): CommonResult<T> {
         return CommonResult(code, msg, data)
     }
+
+    private fun getApiConfig() = CommonApp.config.apiConfig
 }

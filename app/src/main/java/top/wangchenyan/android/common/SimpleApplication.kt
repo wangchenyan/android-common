@@ -19,6 +19,12 @@ class SimpleApplication : Application() {
             imageLoaderConfig {
                 placeholder = R.mipmap.ic_launcher
             }
+            apiConfig({}) {
+                codeJsonName = "errorCode"
+                msgJsonName = "errorMsg"
+                dataJsonName = "data"
+                successCode = 0
+            }
         }
         initCRouter()
     }

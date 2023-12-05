@@ -16,14 +16,12 @@
 package me.wcy.common.net.gson
 
 import com.google.gson.Gson
-import com.google.gson.JsonElement
-import com.google.gson.annotations.SerializedName
+import me.wcy.common.CommonApp
 import me.wcy.common.net.NetResult
 import me.wcy.common.net.gson.ResponseUtils.readJson
 import okhttp3.ResponseBody
 import retrofit2.Converter
 import java.io.IOException
-import java.io.Serializable
 import java.lang.reflect.Type
 
 internal class NetResultConverter(
@@ -34,23 +32,17 @@ internal class NetResultConverter(
 
     @Throws(IOException::class)
     override fun convert(value: ResponseBody): NetResult<*> {
-        val jsonElement = value.readJson(gson, removeNullValues)
-        val adapter = gson.getAdapter(RawNetResult::class.java)
-        val result = adapter.fromJsonTree(jsonElement)
-        return if (result.isSuccess()) {
-            val data: Any? = gson.fromJson(result.data, dataType)
-            NetResult(result.code, result.msg, data, result.total)
+        val respJson = value.readJson(gson, removeNullValues).asJsonObject
+        val apiConfig = CommonApp.config.apiConfig
+        val code = respJson.get(apiConfig.codeJsonName)?.asInt ?: Int.MIN_VALUE
+        val msg = respJson.get(apiConfig.msgJsonName)?.asString ?: ""
+        val total = respJson.get(apiConfig.totalJsonName)?.asInt ?: 0
+        return if (code == apiConfig.successCode) {
+            val dataJson = respJson.get(apiConfig.dataJsonName)
+            val data: Any? = gson.fromJson(dataJson, dataType)
+            NetResult(code, msg, data, total)
         } else {
-            NetResult(result.code, result.msg, null, result.total)
+            NetResult(code, msg, null, total)
         }
-    }
-
-    data class RawNetResult(
-        @SerializedName("code") var code: Int = Integer.MIN_VALUE,
-        @SerializedName("msg", alternate = ["message"]) var msg: String? = null,
-        @SerializedName("data", alternate = ["result"]) var data: JsonElement? = null,
-        @SerializedName("total") val total: Int = 0,
-    ) : Serializable {
-        fun isSuccess(): Boolean = (code == 200)
     }
 }

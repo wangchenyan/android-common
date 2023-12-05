@@ -1,5 +1,7 @@
 package me.wcy.common.model
 
+import me.wcy.common.CommonApp
+
 /**
  * Created by wangchenyan.top on 2022/8/31.
  */
@@ -8,20 +10,22 @@ data class CommonResult<T>(
     val msg: String?,
     val data: T?
 ) {
-    fun isSuccess(): Boolean = (code == 200)
+    fun isSuccess(): Boolean = (code == getApiConfig().successCode)
 
-    fun isSuccessWithData(): Boolean = (code == 200 && data != null)
+    fun isSuccessWithData(): Boolean = (code == getApiConfig().successCode && data != null)
 
     fun getDataOrThrow(): T = data!!
 
     companion object {
         fun <T> success(data: T): CommonResult<T> {
-            return CommonResult(200, null, data)
+            return CommonResult(getApiConfig().successCode, null, data)
         }
 
-        fun <T> fail(code: Int = -1, msg: String? = null): CommonResult<T> {
-            val c = if (code == 200) -1 else code
+        fun <T> fail(code: Int = Int.MIN_VALUE, msg: String? = null): CommonResult<T> {
+            val c = if (code == getApiConfig().successCode) Int.MIN_VALUE else code
             return CommonResult(c, msg, null)
         }
+
+        private fun getApiConfig() = CommonApp.config.apiConfig
     }
 }
