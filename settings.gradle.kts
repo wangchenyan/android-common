@@ -17,5 +17,5 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "android-common"
-include(":app")
+include(":sample")
 include(":common")

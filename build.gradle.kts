@@ -8,6 +8,6 @@ plugins {
 
 buildscript {
     dependencies {
-        classpath("com.github.wangchenyan:AutoRegister:1.4.3-beta02")
+        classpath("com.github.wangchenyan:AutoRegister:1.4.3")
     }
 }
