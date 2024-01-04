@@ -6,20 +6,20 @@ import top.wangchenyan.android.common.CommonConfigDsl
  * Created by wangchenyan.top on 2023/8/17.
  */
 class ApiConfig internal constructor(builder: Builder) {
-    val codeJsonName: String
-    val msgJsonName: String
-    val dataJsonName: String
-    val totalJsonName: String
+    val codeJsonNames: List<String>
+    val msgJsonNames: List<String>
+    val dataJsonNames: List<String>
+    val totalJsonNames: List<String>
     val successCode: Int
     val authInvalidCodes: Set<Int>
     val onAuthInvalid: suspend () -> Unit
     val beforeApiCall: suspend () -> Unit
 
     init {
-        codeJsonName = builder.codeJsonName
-        msgJsonName = builder.msgJsonName
-        dataJsonName = builder.dataJsonName
-        totalJsonName = builder.totalJsonName
+        codeJsonNames = builder.codeJsonNames
+        msgJsonNames = builder.msgJsonNames
+        dataJsonNames = builder.dataJsonNames
+        totalJsonNames = builder.totalJsonNames
         successCode = builder.successCode
         authInvalidCodes = builder.authInvalidCodes
         onAuthInvalid = builder.onAuthInvalid
@@ -28,10 +28,10 @@ class ApiConfig internal constructor(builder: Builder) {
 
     @CommonConfigDsl
     class Builder(val onAuthInvalid: suspend () -> Unit) {
-        var codeJsonName: String = "code"
-        var msgJsonName: String = "msg"
-        var dataJsonName: String = "data"
-        var totalJsonName: String = "total"
+        var codeJsonNames: List<String> = listOf("code")
+        var msgJsonNames: List<String> = listOf("msg", "message")
+        var dataJsonNames: List<String> = listOf("data", "result")
+        var totalJsonNames: List<String> = listOf("total")
         var successCode: Int = 200
         var authInvalidCodes: Set<Int> = setOf(401)
         var beforeApiCall: suspend () -> Unit = {}

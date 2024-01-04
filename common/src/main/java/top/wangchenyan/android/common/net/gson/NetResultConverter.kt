@@ -16,11 +16,13 @@
 package top.wangchenyan.android.common.net.gson
 
 import com.google.gson.Gson
+import com.google.gson.JsonElement
+import com.google.gson.JsonObject
+import okhttp3.ResponseBody
+import retrofit2.Converter
 import top.wangchenyan.android.common.CommonApp
 import top.wangchenyan.android.common.net.NetResult
 import top.wangchenyan.android.common.net.gson.ResponseUtils.readJson
-import okhttp3.ResponseBody
-import retrofit2.Converter
 import java.io.IOException
 import java.lang.reflect.Type
 
@@ -34,15 +36,24 @@ internal class NetResultConverter(
     override fun convert(value: ResponseBody): NetResult<*> {
         val respJson = value.readJson(gson, removeNullValues).asJsonObject
         val apiConfig = CommonApp.config.apiConfig
-        val code = respJson.get(apiConfig.codeJsonName)?.asInt ?: Int.MIN_VALUE
-        val msg = respJson.get(apiConfig.msgJsonName)?.asString ?: ""
-        val total = respJson.get(apiConfig.totalJsonName)?.asInt ?: 0
+        val code = respJson.get(apiConfig.codeJsonNames)?.asInt ?: Int.MIN_VALUE
+        val msg = respJson.get(apiConfig.msgJsonNames)?.asString ?: ""
+        val total = respJson.get(apiConfig.totalJsonNames)?.asInt ?: 0
         return if (code == apiConfig.successCode) {
-            val dataJson = respJson.get(apiConfig.dataJsonName)
+            val dataJson = respJson.get(apiConfig.dataJsonNames)
             val data: Any? = gson.fromJson(dataJson, dataType)
             NetResult(code, msg, data, total)
         } else {
             NetResult(code, msg, null, total)
         }
+    }
+
+    private fun JsonObject.get(memberNames: List<String>): JsonElement? {
+        memberNames.forEach {
+            if (has(it)) {
+                return get(it)
+            }
+        }
+        return null
     }
 }

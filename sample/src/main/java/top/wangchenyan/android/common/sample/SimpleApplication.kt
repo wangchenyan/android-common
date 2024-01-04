@@ -2,10 +2,10 @@ package top.wangchenyan.android.common.sample
 
 import android.app.Application
 import android.content.Intent
-import top.wangchenyan.android.common.CommonApp
-import top.wangchenyan.android.common.ui.activity.FragmentContainerActivity
 import me.wcy.router.CRouter
 import me.wcy.router.RouterClient
+import top.wangchenyan.android.common.CommonApp
+import top.wangchenyan.android.common.ui.activity.FragmentContainerActivity
 
 /**
  * Created by wangchenyan.top on 2023/4/16.
@@ -20,9 +20,9 @@ class SimpleApplication : Application() {
                 placeholder = R.mipmap.ic_launcher
             }
             apiConfig({}) {
-                codeJsonName = "errorCode"
-                msgJsonName = "errorMsg"
-                dataJsonName = "data"
+                codeJsonNames = listOf("errorCode")
+                msgJsonNames = listOf("errorMsg")
+                dataJsonNames = listOf("data")
                 successCode = 0
             }
         }
