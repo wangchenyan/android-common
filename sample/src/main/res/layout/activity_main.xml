@@ -7,7 +7,7 @@
     android:orientation="vertical"
     tools:context=".MainActivity">
 
-    <top.wangchenyan.android.common.widget.TitleLayout
+    <top.wangchenyan.common.widget.TitleLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:tlBackgroundColor="@color/white"

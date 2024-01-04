@@ -6,11 +6,11 @@ plugins {
 }
 
 android {
-    namespace = "top.wangchenyan.android.common.sample"
+    namespace = "top.wangchenyan.common.sample"
     compileSdk = 34
 
     defaultConfig {
-        applicationId = "top.wangchenyan.android.common.sample"
+        applicationId = "top.wangchenyan.common.sample"
         minSdk = 23
         targetSdk = 34
         versionCode = 1
