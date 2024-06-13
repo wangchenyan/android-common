@@ -2,7 +2,7 @@ plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
     id("com.google.devtools.ksp")
-    id("auto-register")
+    id("crouter-plugin")
 }
 
 android {
@@ -47,24 +47,7 @@ ksp {
     arg("defaultHost", "common.android")
 }
 
-autoregister {
-    registerInfo = listOf(
-        // crouter 注解收集
-        mapOf(
-            "scanInterface" to "me.wcy.router.annotation.RouteLoader",
-            "codeInsertToClassName" to "me.wcy.router.RouteSet",
-            "codeInsertToMethodName" to "init",
-            "registerMethodName" to "register",
-            "include" to listOf("me/wcy/router/annotation/loader/.*")
-        )
-    )
-}
-
 dependencies {
-    implementation("androidx.core:core-ktx:1.12.0")
-    implementation("androidx.appcompat:appcompat:1.6.1")
-    implementation("com.google.android.material:material:1.10.0")
-    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
-    ksp("com.github.wangchenyan.crouter:crouter-compiler:2.4.0-beta01")
+    ksp("com.github.wangchenyan.crouter:crouter-processor:3.0.0-beta01")
     implementation(project(":common"))
 }
