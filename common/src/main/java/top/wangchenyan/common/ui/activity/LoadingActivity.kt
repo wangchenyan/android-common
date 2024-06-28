@@ -103,7 +103,7 @@ abstract class LoadingActivity : RouterActivity() {
     }
 
     fun showLoading(cancelable: Boolean = true) {
-        showLoading(getString(R.string.common_loading))
+        showLoading(getString(R.string.common_loading), cancelable)
     }
 
     fun showLoading(message: String, cancelable: Boolean = true) {
