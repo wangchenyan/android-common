@@ -10,3 +10,12 @@ fun toast(text: CharSequence?) {
 fun toast(resId: Int, vararg args: Any) {
     ToastUtils.show(resId, *args)
 }
+
+fun toastLong(text: CharSequence?) {
+    if (text.isNullOrEmpty()) return
+    ToastUtils.showLong(text)
+}
+
+fun toastLong(resId: Int, vararg args: Any) {
+    ToastUtils.showLong(resId, *args)
+}

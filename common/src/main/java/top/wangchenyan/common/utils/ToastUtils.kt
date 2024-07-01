@@ -10,15 +10,25 @@ object ToastUtils {
 
     @JvmStatic
     fun show(text: CharSequence?) {
-        showToast(text.toString())
+        showToast(false, text.toString())
     }
 
     @JvmStatic
     fun show(@StringRes resId: Int, vararg args: Any) {
-        showToast(StringUtils.getString(resId), *args)
+        showToast(false, StringUtils.getString(resId), *args)
     }
 
-    private fun showToast(text: String, vararg args: Any) {
+    @JvmStatic
+    fun showLong(text: CharSequence?) {
+        showToast(true, text.toString())
+    }
+
+    @JvmStatic
+    fun showLong(@StringRes resId: Int, vararg args: Any) {
+        showToast(true, StringUtils.getString(resId), *args)
+    }
+
+    private fun showToast(isLong: Boolean, text: String, vararg args: Any) {
         if (text.isEmpty()) {
             return
         }
@@ -26,6 +36,7 @@ object ToastUtils {
         com.blankj.utilcode.util.ToastUtils.make()
             .setMode(mode)
             .setGravity(Gravity.CENTER, 0, 0)
+            .setDurationIsLong(isLong)
             .show(text, *args)
     }
 }
