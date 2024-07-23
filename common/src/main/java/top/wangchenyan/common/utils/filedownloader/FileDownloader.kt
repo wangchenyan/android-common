@@ -3,6 +3,9 @@ package top.wangchenyan.common.utils.filedownloader
 import android.app.Application
 import com.liulishuo.filedownloader.BaseDownloadTask
 import com.liulishuo.filedownloader.FileDownloadLargeFileListener
+import kotlin.coroutines.resume
+import kotlin.coroutines.resumeWithException
+import kotlin.coroutines.suspendCoroutine
 
 /**
  * Created by wangchenyan.top on 2022/9/27.
@@ -12,6 +15,27 @@ object FileDownloader {
     fun setupOnApplicationOnCreate(application: Application) {
         com.liulishuo.filedownloader.FileDownloader.setupOnApplicationOnCreate(application)
             .connectionCreator(HttpsFileDownloadUrlConnection.Creator())
+    }
+
+    suspend fun download(
+        url: String,
+        path: String,
+        retry: Int = 3,
+    ): String {
+        return suspendCoroutine { continuation ->
+            download(url, path, object : DownloadListener {
+                override fun onProgress(current: Long, total: Long) {
+                }
+
+                override fun onSuccess(path: String) {
+                    continuation.resume(path)
+                }
+
+                override fun onFail(t: Throwable?) {
+                    continuation.resumeWithException(t ?: RuntimeException("unknown"))
+                }
+            }, retry)
+        }
     }
 
     fun download(
