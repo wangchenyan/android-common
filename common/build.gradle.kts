@@ -33,7 +33,7 @@ dependencies {
     api("com.squareup.retrofit2:retrofit:2.9.0")
     api("com.blankj:utilcodex:1.31.1")
     api("com.github.bumptech.glide:glide:4.13.2")
-    api("com.github.getActivity:ShapeView:8.5")
+    api("com.github.getActivity:ShapeView:9.2")
     api("io.github.scwang90:refresh-layout-kernel:2.0.5")
     api("io.github.scwang90:refresh-header-material:2.0.5")
     api("io.github.scwang90:refresh-footer-classics:2.0.5")

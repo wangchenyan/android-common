@@ -51,7 +51,7 @@
                 android:visibility="gone"
                 app:shape_radius="17dp"
                 app:shape_strokeColor="@color/common_text_theme"
-                app:shape_strokeWidth="1dp"
+                app:shape_strokeSize="1dp"
                 app:shape_textColor="@color/common_text_theme"
                 tools:visibility="visible" />
         </LinearLayout>
