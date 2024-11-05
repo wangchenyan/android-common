@@ -3,8 +3,6 @@ package top.wangchenyan.common.ext
 import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
-import android.net.http.SslError
-import android.webkit.SslErrorHandler
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
@@ -92,11 +90,12 @@ private class WebClient : WebViewClient() {
         return true
     }
 
-    override fun onReceivedSslError(
+    /* fix Google Play 审核 */
+    /*override fun onReceivedSslError(
         view: WebView?,
         handler: SslErrorHandler?,
         error: SslError?
     ) {
         handler?.proceed()
-    }
+    }*/
 }
