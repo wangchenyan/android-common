@@ -18,6 +18,6 @@
     <application>
         <activity
             android:name=".ui.activity.FragmentContainerActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="behind" />
     </application>
 </manifest>

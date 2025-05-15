@@ -19,12 +19,16 @@ import androidx.annotation.LayoutRes
 import androidx.annotation.StringRes
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.core.content.res.getBooleanOrThrow
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.forEach
 import androidx.core.view.isVisible
+import androidx.core.view.updatePadding
 import androidx.core.widget.NestedScrollView
 import com.blankj.utilcode.util.ActivityUtils
 import com.blankj.utilcode.util.SizeUtils
-import com.gyf.immersionbar.ImmersionBar
 import top.wangchenyan.common.CommonApp
 import top.wangchenyan.common.R
 import top.wangchenyan.common.databinding.CommonTitleLayoutBinding
@@ -32,7 +36,6 @@ import top.wangchenyan.common.databinding.CommonTitleMenuButtonBinding
 import top.wangchenyan.common.databinding.CommonTitleMenuImageBinding
 import top.wangchenyan.common.databinding.CommonTitleMenuTextBinding
 import top.wangchenyan.common.utils.AndroidVersionUtils
-import top.wangchenyan.common.utils.StatusBarUtils
 import kotlin.math.max
 import kotlin.math.min
 
@@ -42,17 +45,23 @@ class TitleLayout @JvmOverloads constructor(
     defStyleAttr: Int = 0
 ) : LinearLayout(context, attrs, defStyleAttr) {
     private val viewBinding: CommonTitleLayoutBinding
+    private val windowInsetsController: WindowInsetsControllerCompat? by lazy {
+        val activity = ActivityUtils.getActivityByContext(context) ?: return@lazy null
+        val contentView = activity.findViewById<View>(android.R.id.content) ?: return@lazy null
+        WindowCompat.getInsetsController(activity.window, contentView)
+    }
     private val scrollThreshold: Float
     private val updateTitleAlphaWhenScroll: Boolean
+    private var scrollViewId = 0
     private var startTextStyle: TextStyle = TextStyle.AUTO
     private var endTextStyle: TextStyle = TextStyle.AUTO
     private var currTextStyle: TextStyle = TextStyle.AUTO
     private var contentView: View? = null
 
     sealed class TextStyle(val value: Int) {
-        object AUTO : TextStyle(0)
-        object BLACK : TextStyle(1)
-        object WHITE : TextStyle(2)
+        data object AUTO : TextStyle(0)
+        data object BLACK : TextStyle(1)
+        data object WHITE : TextStyle(2)
 
         companion object {
             fun valueOf(value: Int): TextStyle {
@@ -76,7 +85,7 @@ class TitleLayout @JvmOverloads constructor(
         startTextStyle = TextStyle.valueOf(startTextStyleStr)
         val endTextStyleStr = ta.getInt(R.styleable.TitleLayout_tlTextStyleAfterScroll, 0)
         endTextStyle = TextStyle.valueOf(endTextStyleStr)
-        val scrollViewId = ta.getResourceId(R.styleable.TitleLayout_tlScrollViewId, 0)
+        scrollViewId = ta.getResourceId(R.styleable.TitleLayout_tlScrollViewId, 0)
         scrollThreshold = ta.getDimension(
             R.styleable.TitleLayout_tlScrollThreshold,
             SizeUtils.dp2px(100f).toFloat()
@@ -106,14 +115,6 @@ class TitleLayout @JvmOverloads constructor(
         }
         ta.recycle()
 
-        ActivityUtils.getActivityByContext(context)?.apply {
-            if (StatusBarUtils.isSupportStatusBarTransparent()) {
-                StatusBarUtils.getStatusBarHeight(this) { height ->
-                    setPadding(0, height, 0, 0)
-                }
-            }
-        }
-
         if (backgroundDrawable != null) {
             background = backgroundDrawable
         } else if (backgroundColor != null) {
@@ -135,8 +136,28 @@ class TitleLayout @JvmOverloads constructor(
         }
 
         setCurrTextStyle(startTextStyle)
+    }
 
-        post { bindScrollView(scrollViewId) }
+    override fun onAttachedToWindow() {
+        super.onAttachedToWindow()
+        initWindowInsets()
+        bindScrollView(scrollViewId)
+    }
+
+    private fun initWindowInsets() {
+        val applyInsets = { insets: WindowInsetsCompat ->
+            val statusBarsInsets = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            if (paddingTop != statusBarsInsets.top) {
+                updatePadding(top = statusBarsInsets.top)
+            }
+        }
+        ViewCompat.getRootWindowInsets(this)?.let {
+            applyInsets(it)
+        }
+        ViewCompat.setOnApplyWindowInsetsListener(this) { v, insets ->
+            applyInsets(insets)
+            insets
+        }
     }
 
     fun setCurrTextStyle(style: TextStyle) {
@@ -150,11 +171,9 @@ class TitleLayout @JvmOverloads constructor(
             TextStyle.WHITE -> false
             else -> getTitleConfig().isStatusBarDarkFontWhenAuto()
         }
-        ActivityUtils.getActivityByContext(context)?.apply {
-            ImmersionBar.with(this)
-                .statusBarDarkFont(statusBarDarkFont)
-                .init()
-        }
+
+        windowInsetsController?.isAppearanceLightStatusBars = statusBarDarkFont
+
         val textColor = getTextColor()
         getTitleTextView()?.setTextColor(textColor)
         viewBinding.ivBack.imageTintList = textColor

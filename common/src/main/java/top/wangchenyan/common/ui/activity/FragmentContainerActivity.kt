@@ -3,17 +3,14 @@ package top.wangchenyan.common.ui.activity
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import androidx.fragment.app.Fragment
+import me.wcy.router.CRouter
 import top.wangchenyan.common.CommonApp
 import top.wangchenyan.common.ui.fragment.BackEventInterceptor
-import top.wangchenyan.common.ui.fragment.BaseFragment
-import me.wcy.router.CRouter
 
 /**
  * Created by wangchenyan.top on 2022/6/8.
  */
 open class FragmentContainerActivity : BaseActivity() {
-    private var fragment: Fragment? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -41,26 +38,16 @@ open class FragmentContainerActivity : BaseActivity() {
                 return
             }
         }
-        fragment = clazz.newInstance()
-        fragment?.let { fragment ->
-            fragment.arguments = intent.extras
-            fragment.arguments?.remove(CRouter.CROUTER_KEY_FRAGMENT_URI)
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.add(android.R.id.content, fragment, TAG_FRAGMENT)
-            transaction.commitNowAllowingStateLoss()
-        }
-    }
-
-    override fun getNavigationBarColor(): Int {
-        val fragment = fragment
-        if (fragment is BaseFragment && fragment.getNavigationBarColor() != 0) {
-            return fragment.getNavigationBarColor()
-        }
-        return super.getNavigationBarColor()
+        val fragment = clazz.newInstance()
+        fragment.arguments = intent.extras
+        fragment.arguments?.remove(CRouter.CROUTER_KEY_FRAGMENT_URI)
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(android.R.id.content, fragment, TAG_FRAGMENT)
+        transaction.commitNowAllowingStateLoss()
     }
 
     override fun onBackPressed() {
-        val fragment = fragment
+        val fragment = supportFragmentManager.findFragmentByTag(TAG_FRAGMENT)
         if (fragment !is BackEventInterceptor || fragment.onInterceptBackEvent().not()) {
             super.onBackPressed()
         }

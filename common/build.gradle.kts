@@ -6,10 +6,10 @@ plugins {
 
 android {
     namespace = "top.wangchenyan.common"
-    compileSdk = 34
+    compileSdk = 36
     defaultConfig {
         minSdk = 21
-        targetSdk = 34
+        targetSdk = 36
         consumerProguardFile("consumer-rules.pro")
     }
     compileOptions {
@@ -40,7 +40,6 @@ dependencies {
     api("com.github.wangchenyan.crouter:crouter-api:3.0.0-beta01")
     api("com.github.wangchenyan:radapter3:3.1.1")
     api("com.kingja.loadsir:loadsir:1.3.8")
-    api("com.geyifeng.immersionbar:immersionbar:3.2.2")
     implementation("com.github.soulqw:SoulPermission:1.4.0")
     implementation("com.liulishuo.filedownloader:library:1.7.7")
     implementation("top.zibin:Luban:1.1.8")

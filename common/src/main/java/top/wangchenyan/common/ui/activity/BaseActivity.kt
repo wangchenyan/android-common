@@ -4,31 +4,40 @@ import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
-import androidx.annotation.ColorRes
+import androidx.activity.enableEdgeToEdge
 import com.blankj.utilcode.util.KeyboardUtils
-import com.gyf.immersionbar.ImmersionBar
+import top.wangchenyan.common.CommonApp
 import top.wangchenyan.common.R
-import top.wangchenyan.common.utils.StatusBarUtils
+import top.wangchenyan.common.ext.getColorEx
+import top.wangchenyan.common.insets.WindowInsetsManager
+import top.wangchenyan.common.insets.WindowInsetsManager.Companion.obtainWindowInsetsManager
 import top.wangchenyan.common.widget.TitleLayout
 
 abstract class BaseActivity : LoadingActivity() {
     private var titleLayout: TitleLayout? = null
     private var isStart = false
+    private var windowInsetsManager: WindowInsetsManager? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
+        enableEdgeToEdge()
         super.onCreate(savedInstanceState)
+
+        configWindowInsets {
+            fillNavBar = true
+            fillDisplayCutout = false
+            navBarColor = getColorEx(R.color.common_background_color)
+            displayCutoutColor = getColorEx(R.color.common_background_color)
+            navBarButtonDarkStyle = CommonApp.config.isDarkMode().not()
+        }
+
         Log.d(TAG, javaClass.simpleName + ": onCreate")
     }
 
-    override fun onPostCreate(savedInstanceState: Bundle?) {
-        super.onPostCreate(savedInstanceState)
-        if (StatusBarUtils.isSupportStatusBarTransparent()) {
-            ImmersionBar.with(this)
-                .navigationBarColor(getNavigationBarColor())
-                .navigationBarDarkIcon(true)
-                .keyboardEnable(true)
-                .init()
+    fun configWindowInsets(block: WindowInsetsManager.() -> Unit) {
+        val windowInsetsManager = this.windowInsetsManager ?: obtainWindowInsetsManager().also {
+            this.windowInsetsManager = it
         }
+        block(windowInsetsManager)
     }
 
     override fun onStart() {
@@ -56,11 +65,6 @@ abstract class BaseActivity : LoadingActivity() {
 
     override fun setTitle(title: CharSequence?) {
         getTitleLayout()?.setTitleText(title)
-    }
-
-    @ColorRes
-    protected open fun getNavigationBarColor(): Int {
-        return R.color.common_background_color
     }
 
     override fun onDestroy() {
