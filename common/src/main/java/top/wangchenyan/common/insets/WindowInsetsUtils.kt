@@ -2,11 +2,11 @@ package top.wangchenyan.common.insets
 
 import android.app.Activity
 import android.view.View
-import android.view.View.OnAttachStateChangeListener
 import androidx.core.graphics.Insets
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsCompat.Type.InsetsType
+import androidx.core.view.doOnAttach
 
 /**
  * Created by wangchenyan.top on 2025/5/14.
@@ -23,19 +23,7 @@ object WindowInsetsUtils {
     }
 
     fun View.getStatusBarHeight(callback: (Int) -> Unit) {
-        if (isAttachedToWindow) {
-            callback(getStatusBarHeight())
-        } else {
-            addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-                override fun onViewAttachedToWindow(v: View) {
-                    callback(getStatusBarHeight())
-                    removeOnAttachStateChangeListener(this)
-                }
-
-                override fun onViewDetachedFromWindow(v: View) {
-                }
-            })
-        }
+        doOnAttach { callback(getStatusBarHeight()) }
     }
 
     fun Activity.getNavigationBarHeight(): Int {
@@ -48,19 +36,7 @@ object WindowInsetsUtils {
     }
 
     fun View.getNavigationBarHeight(callback: (Int) -> Unit) {
-        if (isAttachedToWindow) {
-            callback(getNavigationBarHeight())
-        } else {
-            addOnAttachStateChangeListener(object : OnAttachStateChangeListener {
-                override fun onViewAttachedToWindow(v: View) {
-                    callback(getNavigationBarHeight())
-                    removeOnAttachStateChangeListener(this)
-                }
-
-                override fun onViewDetachedFromWindow(v: View) {
-                }
-            })
-        }
+        doOnAttach { callback(getNavigationBarHeight()) }
     }
 
     private fun View.getWindowInsets(@InsetsType typeMask: Int): Insets {
